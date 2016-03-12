@@ -1,6 +1,6 @@
 #pragma once
 
-namespace lt
+namespace liter
 {
 	template <typename T, typename ...TArgs>
 	auto variadic_sum(T v1, TArgs... args) -> decltype(v1 + variadic_sum(args...))

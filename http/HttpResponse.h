@@ -2,43 +2,46 @@
 
 #include <vector>
 
-namespace lt
+namespace liter
 {
-	class HttpRequest;
-
-	class HttpResponse
+	namespace http
 	{
-	private:
-		HttpRequest *m_request;
+		class HttpRequest;
 
-		std::vector<char> m_header;
-		std::vector<char> m_data;
-		std::string m_last_error;
+		class HttpResponse
+		{
+		private:
+			HttpRequest *m_request;
 
-		long m_response_code;
-		bool m_is_success;
+			std::vector<char> m_header;
+			std::vector<char> m_data;
+			std::string m_last_error;
 
-	public:
-		HttpResponse(HttpRequest *_request);
-		~HttpResponse();
+			long m_response_code;
+			bool m_is_success;
 
-		HttpRequest* get_request() const;
+		public:
+			HttpResponse(HttpRequest *_request);
+			~HttpResponse();
 
-		size_t write_header(char *_content, size_t _size);
-		size_t write_data(char *_content, size_t _size);
+			HttpRequest* get_request() const;
 
-		std::vector<char>& get_header();
-		std::vector<char>& get_data();
+			size_t write_header(char *_content, size_t _size);
+			size_t write_data(char *_content, size_t _size);
 
-		void set_success(bool _success);
-		bool is_success() const;
+			std::vector<char>& get_header();
+			std::vector<char>& get_data();
 
-		void set_last_error(std::string& _error);
-		std::string get_last_error() const;
+			void set_success(bool _success);
+			bool is_success() const;
 
-		void set_response_code(long _code);
-		long get_response_code() const;
-	};
+			void set_last_error(std::string& _error);
+			std::string get_last_error() const;
+
+			void set_response_code(long _code);
+			long get_response_code() const;
+		};
+	}
 }
 
 

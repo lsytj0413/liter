@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace lt
+namespace liter
 {
 	namespace detail
 	{

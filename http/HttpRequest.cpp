@@ -1,7 +1,9 @@
 #include "HttpRequest.h"
 
-namespace lt
-{
+using namespace liter::http;
+
+//namespace liter
+//{
 	HttpRequest::HttpRequest(Functor _fun)
 		:m_callback(_fun)
 	{
@@ -73,6 +75,6 @@ namespace lt
 	{
 		return m_request_data.size();
 	}
-}
+//}
 
 

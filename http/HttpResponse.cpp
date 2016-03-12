@@ -2,8 +2,10 @@
 
 #include <functional>
 
-namespace lt
-{
+using namespace liter::http;
+
+//namespace liter
+//{
 	HttpResponse::HttpResponse(HttpRequest *_request)
 		:m_request(_request)
 		, m_is_success(false)
@@ -76,6 +78,6 @@ namespace lt
 	{
 		return m_response_code;
 	}
-}
+//}
 
 

@@ -2,7 +2,7 @@
 
 #include <mutex>
 
-namespace lt
+namespace liter
 {
 	template <typename T>
 	class Singleton

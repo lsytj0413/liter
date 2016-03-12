@@ -1,6 +1,6 @@
 #pragma once
 
-namespace lt
+namespace liter
 {
 	class uncopyable
 	{

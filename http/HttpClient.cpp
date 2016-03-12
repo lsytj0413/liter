@@ -5,13 +5,15 @@
 
 #include <curl/curl.h>
 
-#include <lt/utils/Singleton.h>
-#include <lt/http/HttpResponse.h>
-#include <lt/http/HttpRequest.h>
-#include <lt/http/CurlHandle.h>
+#include <utils/Singleton.h>
+#include <http/HttpResponse.h>
+#include <http/HttpRequest.h>
+#include <http/CurlHandle.h>
 
-namespace lt
-{
+using namespace liter::http;
+
+//namespace liter
+//{
 #define INIT_AND_PERFORM(x) \
 	{ \
 		if ((x)) \
@@ -249,5 +251,5 @@ namespace lt
 	}
 
 #undef INIT_AND_PERFORM
-}                         
+//}                         
 

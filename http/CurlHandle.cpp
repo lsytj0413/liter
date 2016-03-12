@@ -2,8 +2,10 @@
 
 #include <assert.h>
 
-namespace lt
-{
+using namespace liter::http;
+
+//namespace liter
+//{
 #define CURL_HANDLE_CHECK(t_curl, rt) \
 	{ \
 		if (!t_curl) \
@@ -238,5 +240,5 @@ namespace lt
 		return m_last_error;
 	}
 #undef CURL_HANDLE_CHECK
-}
+//}
 

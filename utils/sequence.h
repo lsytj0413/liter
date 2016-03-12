@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-namespace lt
+namespace liter
 {
 	template <size_t... Seq>
 	struct sequence
