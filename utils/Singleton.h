@@ -1,34 +1,18 @@
 #pragma once
 
-#include <mutex>
+#include "utils/uncopyable.h"
 
 namespace liter
 {
 	template <typename T>
-	class Singleton
+	class Singleton : public uncopyable
 	{
-	private:
-		static T* m_ins;
-		static std::once_flag m_once_flag;
-
 	public:
 		static T* Instance()
 		{
-			std::call_once(m_once_flag, Singleton::create_obj);
-			return m_ins;
-		}
-
-	private:
-		static void create_obj()
-		{
-			static T _ins;
-			Singleton::m_ins = &_ins;
+			/// 不需要考虑多线程的影响，C++11中会保证只初始化一次
+			static T instance_obj;
+			return &instance_obj;
 		}
 	};
-
-	template <typename T>
-	T* Singleton<T>::m_ins = nullptr;
-
-	template <typename T>
-	std::once_flag Singleton<T>::m_once_flag;
 }
