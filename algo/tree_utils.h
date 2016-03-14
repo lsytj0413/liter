@@ -32,19 +32,19 @@ inline size_t right_imp(size_t i)
 // 获取父节点index，从0开始
 inline size_t parent(size_t i)
 {
-    return parent_imp(i + 1) - 1;
+    return detail::parent_imp(i + 1) - 1;
 }
 
 // 获取左子节点index，从0开始
 inline size_t left(size_t i)
 {
-    return left_imp(i + 1) - 1;
+    return detail::left_imp(i + 1) - 1;
 }
 
 // 获取右子节点index，从0开始
 inline size_t right(size_t i)
 {
-    return right_imp(i + 1) - 1;
+    return detail::right_imp(i + 1) - 1;
 }
 
 }
