@@ -14,5 +14,26 @@ namespace detail
 {
 
 }
+/// 从大到小排序 -->> 需要使用最小堆
+/// 从小到大排序 -->> 需要使用最大堆
+
+template <typename Iter, typename Functor>
+void heap_sort(Iter first, Iter last, Functor f)
+{
+    if(first == last)
+    {
+        return ;
+    }
+
+    build_heap(first, last, f);
+
+    last = std::adjust(last, -1);
+    while(last != first)
+    {
+        std::swap(*first, *last);
+        heapify_down(first, last, f);
+    }    
+}
+
 }
 }
