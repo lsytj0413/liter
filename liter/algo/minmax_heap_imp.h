@@ -60,8 +60,6 @@ public:
             throw std::out_of_range("Out of size.");
         }
 
-
-
         if (m_functor(val, m_array[i]))
         {
             // 如果是最大堆, 则 val > m_array[i]
