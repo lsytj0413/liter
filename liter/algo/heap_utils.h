@@ -1,9 +1,14 @@
 #pragma once
 
+#include <iterator>
+
+
 namespace liter
 {
+
 namespace algo
 {
+
 /// µü´úÆ÷+
 template <typename Iter>
 Iter iter_advance(Iter itor, typename Iter::size_type i)
@@ -54,8 +59,8 @@ void heapify_down(Iter first, Iter now, Iter last, Functor f)
 template <typename Iter, typename Functor>
 void heapify_up(Iter first, Iter now, Iter last, Functor f)
 {
-    
 }
 
 }
+
 }

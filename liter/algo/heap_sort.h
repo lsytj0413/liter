@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iterator>
 /* 堆排序 O(nlgn)
  * 原地排序算法，在任何时候，数组中只有常数个元素存储在输入数组之外.
  * 堆：一种完全二叉树，除最后一层外所有层都是满的.
@@ -8,15 +9,12 @@
 
 namespace liter
 {
+
 namespace algo
 {
-namespace detail
-{
 
-}
 /// 从大到小排序 -->> 需要使用最小堆
 /// 从小到大排序 -->> 需要使用最大堆
-
 template <typename Iter, typename Functor>
 void heap_sort(Iter first, Iter last, Functor f)
 {
@@ -27,13 +25,14 @@ void heap_sort(Iter first, Iter last, Functor f)
 
     build_heap(first, last, f);
 
-    last = std::adjust(last, -1);
+    last = std::advance(last, -1);
     while(last != first)
     {
         std::swap(*first, *last);
         heapify_down(first, last, f);
-    }    
+    }
 }
 
 }
+
 }

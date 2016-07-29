@@ -1,15 +1,20 @@
 #pragma once
 
+#include <cstddef>
+
 /* utils
  * 针对树的操作的工具.
 */
 
 namespace liter
 {
+
 namespace algo
 {
+
 namespace detail
 {
+
 // 获取父节点index, 从1开始
 inline size_t parent_imp(size_t i)
 {
@@ -27,6 +32,7 @@ inline size_t right_imp(size_t i)
 {
     return 2*i + 1;
 }
+
 }
 
 // 获取父节点index，从0开始
@@ -48,4 +54,5 @@ inline size_t right(size_t i)
 }
 
 }
+
 }

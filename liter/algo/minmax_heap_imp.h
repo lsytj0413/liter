@@ -1,33 +1,34 @@
 #pragma once
 
+#include <vector>
+#include <iterator>
+#include <exception>
+#include "liter/algo/tree_utils.h"
+
 /*
   最大/最小堆的公共实现.
   在最大/最小堆的实现过程中，基本只有比较函数的不同而已。故将此部分提出.
 */
 
-#include <vector>
-#include <iterator>
-#include <exception>
-
-#include "algo/tree_utils.h"
-
 namespace liter
 {
+
 namespace algo
 {
+
 template <typename T, typename Functor>
 class minmax_heap_imp
 {
-  public:
+public:
     using iterator = typename std::vector<T>::iterator;
     using size_type = typename std::vector<T>::size_type;
     using value_type = typename std::vector<T>::value_type;
 
-  private:
+private:
     std::vector<T> m_array;
     Functor m_functor;
 
-  public:
+public:
     minmax_heap_imp()
     {};
 
@@ -52,36 +53,37 @@ class minmax_heap_imp
         return m_array.empty();
     }
 
-	void set(size_type i, const value_type& val)
-	{
-		if (i >= size())
-		{
-			throw out_of_range("Out of size.");
-		}
+    void set(size_type i, const value_type& val)
+    {
+        if (i >= size())
+        {
+            throw std::out_of_range("Out of size.");
+        }
 
 
-		if (m_functor(val, m_array[i]))
-		{
-			// 如果是最大堆, 则 val > m_array[i]
-			// 如果是最小堆, 则 val < m_array[i]
-			// 在这种情况下都需要向上调整
-			m_array[i] = val;
-			minmax_heapify_up(m_array.begin(), iter_at(i));
-		}
-		else
-		{
-			m_array[i] = val;
-			minmax_heapify_down(m_array.begin(), iter_at(i));
-		}
-	}
 
-	void insert(const value_type& val)
-	{
-		m_array.push_back(val);
-		minmax_heapify_up(m_array.begin(), iter_at(size() - 1));
-	}
+        if (m_functor(val, m_array[i]))
+        {
+            // 如果是最大堆, 则 val > m_array[i]
+            // 如果是最小堆, 则 val < m_array[i]
+            // 在这种情况下都需要向上调整
+            m_array[i] = val;
+            minmax_heapify_up(m_array.begin(), iter_at(i));
+        }
+        else
+        {
+            m_array[i] = val;
+            minmax_heapify_down(m_array.begin(), iter_at(i));
+        }
+    }
 
-  protected:
+    void insert(const value_type& val)
+    {
+        m_array.push_back(val);
+        minmax_heapify_up(m_array.begin(), iter_at(size() - 1));
+    }
+
+protected:
     value_type minmax() const
     {
         if (!empty())
@@ -102,7 +104,7 @@ class minmax_heap_imp
         return val;
     }
 
-  private:
+private:
     void build_heap()
     {
         auto heap_size = size();
@@ -158,5 +160,7 @@ class minmax_heap_imp
     }
 
 };
+
 }
+
 }
