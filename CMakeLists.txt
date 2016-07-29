@@ -4,24 +4,27 @@ PROJECT (liter)
 
 # ADD_SUBDIRECTORY(algo http utilsbin)
 
+include_directories(./)
+
 SET (LITER_SRC
-  algo/heap_sort.h
-  algo/max_heap.h
-  algo/min_heap.h
-  algo/minmax_heap_imp.h
-  algo/tree_utils.h
-  http/CurlHandle.cpp
-  http/CurlHandle.h
-  http/HttpClient.cpp
-  http/HttpClient.h
-  http/HttpRequest.cpp
-  http/HttpRequest.h
-  http/HttpResponse.cpp
-  http/HttpResponse.h
-  utils/binary.h
-  utils/sequence.h
-  utils/Singleton.h
-  utils/uncopyable.h
-  utils/utils.h)
+  liter/algo/heap_sort.h
+  liter/algo/max_heap.h
+  liter/algo/min_heap.h
+  liter/algo/minmax_heap_imp.h
+  liter/algo/tree_utils.h
+  liter/http/CurlHandle.cpp
+  liter/http/CurlHandle.h
+  liter/http/HttpClient.cpp
+  liter/http/HttpClient.h
+  liter/http/HttpRequest.cpp
+  liter/http/HttpRequest.h
+  liter/http/HttpResponse.cpp
+  liter/http/HttpResponse.h
+  liter/utils/binary.h
+  liter/utils/sequence.h
+  liter/utils/Singleton.h
+  liter/utils/uncopyable.h
+  liter/utils/utils.h
+  )
 
 add_executable (liter ${LITER_SRC})
