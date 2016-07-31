@@ -46,6 +46,12 @@ public:
                                                       binary_r_type::value;
 };
 
+template <unsigned long long N>
+long long binary_to()
+{
+    return binary<N>::value;
+}
+
 template <int N>
 struct shift_bit
 {

@@ -5,9 +5,12 @@ PROJECT (test_liter)
 set (CMAKE_CXX_FLAGS "-std=c++11")
 
 SET (TEST_SRC
-  main.cpp)
+  main.cpp
+  utils_test/binaryTest.h
+  utils_test/binaryTest.cpp
+  GlobalEnv.h)
 
-include_directories(../liter)
+include_directories(../)
 
 # locate gtest
 find_package(GTest REQUIRED)
