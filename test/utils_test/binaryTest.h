@@ -26,3 +26,4 @@ protected:
         std::cout << "BinaryTest TearDown" << std::endl;
     }
 };
+

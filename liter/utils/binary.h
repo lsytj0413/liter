@@ -52,7 +52,7 @@ long long binary_to()
     return binary<N>::value;
 }
 
-template <int N>
+template <unsigned int N>
 struct shift_bit
 {
 public:

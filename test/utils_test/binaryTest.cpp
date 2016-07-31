@@ -3,9 +3,11 @@
 #include <gtest/gtest.h>
 #include <liter/utils/binary.h>
 
+
 TEST_F(BinaryTest, testBinary8)
 {
-    EXPECT_EQ(8, liter::binary_to<1000>());
+    auto v = liter::binary<1000>::value;
+    EXPECT_EQ(8, v);
 }
 
 TEST_F(BinaryTest, testBinary5)
@@ -21,4 +23,22 @@ TEST_F(BinaryTest, testBinary17)
 TEST_F(BinaryTest, testBinary1)
 {
     EXPECT_EQ(1, liter::binary_to<1>());
+}
+
+TEST_F(BinaryTest, testShift1)
+{
+    auto v = liter::shift_bit<1>::value;
+    EXPECT_EQ(2, v);
+}
+
+TEST_F(BinaryTest, testShift3)
+{
+    auto v = liter::shift_bit<3>::value;
+    EXPECT_EQ(8, v);
+}
+
+TEST_F(BinaryTest, testShift7)
+{
+    auto v = liter::shift_bit<7>::value;
+    EXPECT_EQ(128, v);
 }
