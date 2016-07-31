@@ -8,7 +8,10 @@ SET (TEST_SRC
   main.cpp
   utils_test/binaryTest.h
   utils_test/binaryTest.cpp
-  GlobalEnv.h)
+  GlobalEnv.h
+  utils_test/singletonTest.h
+  utils_test/singletonTest.cpp
+  )
 
 include_directories(../)
 
