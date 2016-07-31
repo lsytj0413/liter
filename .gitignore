@@ -1,4 +1,5 @@
 liter/.ycm_extra_conf.py
+test/.ycm_extra_conf.py
 test/build/*
 test/build
 *.pyc
