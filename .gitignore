@@ -3,3 +3,9 @@ test/.ycm_extra_conf.py
 test/build/*
 test/build
 *.pyc
+test/GPATH
+test/GRTAGS
+test/GTAGS
+liter/GPATH
+liter/GRTAGS
+liter/GTAGS
