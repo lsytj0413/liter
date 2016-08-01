@@ -11,6 +11,8 @@ SET (TEST_SRC
   GlobalEnv.h
   utils_test/singletonTest.h
   utils_test/singletonTest.cpp
+  utils_test/stringUtilTest.h
+  utils_test/stringUtilTest.cpp
   )
 
 include_directories(../)
