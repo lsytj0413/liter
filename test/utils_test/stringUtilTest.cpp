@@ -39,3 +39,27 @@ TEST_F(StringUtilTest, testIntp)
     EXPECT_EQ(false, liter::int_p("232.3423"));
     EXPECT_EQ(false, liter::int_p(" sdfs "));
 }
+
+TEST_F(StringUtilTest, testFloatp)
+{
+    EXPECT_EQ(true, liter::float_p("123"));
+    EXPECT_EQ(true, liter::float_p("00223"));
+    EXPECT_EQ(true, liter::float_p("320043"));
+    EXPECT_EQ(true, liter::float_p("3200"));
+    EXPECT_EQ(true, liter::float_p("00"));
+    EXPECT_EQ(true, liter::float_p("00.0"));
+    EXPECT_EQ(true, liter::float_p("1.00"));
+    EXPECT_EQ(true, liter::float_p("0.0"));
+    EXPECT_EQ(true, liter::float_p("232.3423"));
+
+    EXPECT_EQ(false, liter::float_p(""));
+    EXPECT_EQ(false, liter::float_p("ab"));
+    EXPECT_EQ(false, liter::float_p("02c"));
+    EXPECT_EQ(false, liter::float_p("3234."));
+    EXPECT_EQ(false, liter::float_p(".234234"));
+    EXPECT_EQ(false, liter::float_p("sfs.2252"));
+    EXPECT_EQ(false, liter::float_p(" sdfs "));
+    EXPECT_EQ(false, liter::float_p(".0"));
+    EXPECT_EQ(false, liter::float_p("0."));
+    EXPECT_EQ(false, liter::float_p("0.0.0"));
+}
