@@ -18,35 +18,42 @@ public:
     using value_type = T;
     using size_type = size_t;
 
-    range_iterator(size_type cur_start, value_type begin_val, value_type step_val)
-            : m_cursor(cur_start)
-            , m_value(begin_val)
+    range_iterator(value_type curr_val, value_type end_val, value_type step_val)
+            : m_value(curr_val)
             , m_step(step_val)
-    {
-        m_value += (m_step * m_cursor);
-    };
+            , m_end(end_val)
+    {};
 
     value_type operator*() const
     {
+        if (m_value >= m_end)
+        {
+            throw logic_error("can't get value of end iterator.");
+        }
+
         return m_value;
     };
 
     bool operator!=(const range_iterator& rhs) const
     {
-        return (m_cursor != rhs.m_cursor);
+        return m_value != rhs.m_value;
     };
 
     range_iterator& operator++(void)
     {
         m_value += m_step;
-        ++ m_cursor;
+        if (m_value > m_end)
+        {
+            m_value = m_end;
+        }
+
         return (*this);
     };
 
 private:
-    size_type m_cursor;
-    const value_type m_step;
     value_type m_value;
+    const value_type m_end;
+    const value_type m_step;
 
 };
 
@@ -77,12 +84,12 @@ public:
 
     const_iterator begin() const
     {
-        return {0, m_begin, m_end};
+        return {m_begin, m_end, m_step};
     };
 
     const_iterator end() const
     {
-        return {m_max_count, m_begin, m_end};
+        return {m_end, m_end, m_step};
     };
 
 private:
@@ -101,6 +108,10 @@ private:
         else if(m_step < 0 && m_begin <= m_end)
         {
             throw logic_error("End value must be less than begin value.");
+        }
+        else if(0 == m_step)
+        {
+            throw logic_error("Step value must be non-zero.");
         }
 
         size_type x = static_cast<size_type>((m_end - m_begin) / m_step);
