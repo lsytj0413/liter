@@ -12,13 +12,13 @@ namespace detail
 {
 
 template <typename T>
-class range_iterator
+class RangeIterator
 {
 public:
     using value_type = T;
     using size_type = size_t;
 
-    range_iterator(value_type curr_val, value_type end_val, value_type step_val)
+    RangeIterator(value_type curr_val, value_type end_val, value_type step_val)
             : m_value(curr_val)
             , m_step(step_val)
             , m_end(end_val)
@@ -34,12 +34,12 @@ public:
         return m_value;
     };
 
-    bool operator!=(const range_iterator& rhs) const
+    bool operator!=(const RangeIterator& rhs) const
     {
         return m_value != rhs.m_value;
     };
 
-    range_iterator& operator++(void)
+    RangeIterator& operator++(void)
     {
         m_value += m_step;
         if (m_value > m_end)
@@ -60,17 +60,17 @@ private:
 }
 
 template <typename T>
-class range_impl
+class RangeImp
 {
 public:
     using value_type = T;
     using reference = const value_type&;
     using const_reference = const value_type&;
-    using iterator = const detail::range_iterator<value_type>;
-    using const_iterator = const detail::range_iterator<value_type>;
-    using size_type = typename detail::range_iterator<value_type>::iterator;
+    using iterator = const detail::RangeIterator<value_type>;
+    using const_iterator = const detail::RangeIterator<value_type>;
+    using size_type = typename detail::RangeIterator<value_type>::iterator;
 
-    range_impl(value_type begin_val, value_type end_val, value_type step_val)
+    RangeImp(value_type begin_val, value_type end_val, value_type step_val)
             : m_begin(begin_val)
             , m_end(end_val)
             , m_step(step_val)
@@ -124,21 +124,21 @@ private:
 };
 
 template <typename T>
-range_impl<T> range(T&& end)
+RangeImp<T> range(T&& end)
 {
     return {{}, std::forward(end), 1};
 }
 
 template <typename T>
-range_impl<T> range(T&& begin, T&& end)
+RangeImp<T> range(T&& begin, T&& end)
 {
     return {std::forward(begin), std::forward(end), 1};
 }
 
 template <typename T, typename U>
-auto range(T&& begin, T&& end, U&& step) -> range_impl<decltype(begin + step)>
+auto range(T&& begin, T&& end, U&& step) -> RangeImp<decltype(begin + step)>
 {
-    using return_type = range_impl<decltype(begin + step)>;
+    using return_type = RangeImp<decltype(begin + step)>;
     return return_type(std::forward(begin), std::forward(end), std::forward(step));
 }
 
