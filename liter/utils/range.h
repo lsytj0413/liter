@@ -119,7 +119,6 @@ private:
         {
             ++x;
         }
-
         return x;
     }
 };
