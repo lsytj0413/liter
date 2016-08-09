@@ -13,6 +13,8 @@ SET (TEST_SRC
   utils_test/singletonTest.cpp
   utils_test/stringUtilTest.h
   utils_test/stringUtilTest.cpp
+  utils_test/rangeTest.h
+  utils_test/rangeTest.cpp
   )
 
 include_directories(../)

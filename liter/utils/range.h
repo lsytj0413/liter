@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 using std::logic_error;
 
 
@@ -68,7 +69,7 @@ public:
     using const_reference = const value_type&;
     using iterator = const detail::RangeIterator<value_type>;
     using const_iterator = const detail::RangeIterator<value_type>;
-    using size_type = typename detail::RangeIterator<value_type>::iterator;
+    using size_type = typename detail::RangeIterator<value_type>::size_type;
 
     RangeImp(value_type begin_val, value_type end_val, value_type step_val)
             : m_begin(begin_val)
@@ -126,20 +127,20 @@ private:
 template <typename T>
 RangeImp<T> range(T&& end)
 {
-    return {{}, std::forward(end), 1};
+    return {{}, std::forward<T>(end), 1};
 }
 
 template <typename T>
 RangeImp<T> range(T&& begin, T&& end)
 {
-    return {std::forward(begin), std::forward(end), 1};
+    return {std::forward<T>(begin), std::forward<T>(end), 1};
 }
 
 template <typename T, typename U>
 auto range(T&& begin, T&& end, U&& step) -> RangeImp<decltype(begin + step)>
 {
     using return_type = RangeImp<decltype(begin + step)>;
-    return return_type(std::forward(begin), std::forward(end), std::forward(step));
+    return return_type(std::forward<T>(begin), std::forward<T>(end), std::forward<T>(step));
 }
 
 }
