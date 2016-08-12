@@ -21,6 +21,7 @@ private:
 public:
     optional(){};
 
+    // TODO: 赋值构造与右值版本
     optional(const T& v)
     {
         create(v);
