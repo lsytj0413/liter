@@ -32,9 +32,9 @@ struct Lazy
         return *m_value;
     }
 
-    bool init() const
+    bool init_p() const
     {
-        return m_value.is_init();
+        return m_value.init_p();
     }
 
 private:

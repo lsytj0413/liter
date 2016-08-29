@@ -47,14 +47,14 @@ public:
         create(std::forward<TArgs>(args)...);
     }
 
-    bool is_init() const
+    bool init_p() const
     {
         return m_init;
     }
 
     T const& operator*() const
     {
-        if (is_init())
+        if (init_p())
         {
             return *((T*)(&m_data));
         }
@@ -72,7 +72,7 @@ private:
 
     void destroy()
     {
-        if (is_init())
+        if (init_p())
         {
             m_init = false;
             ((T*)(&m_data))->~T();
