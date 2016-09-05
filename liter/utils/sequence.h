@@ -20,14 +20,14 @@ private:
 
     };
 
-    template <size_t Beg, size_t End, size_t... Seq>
-    struct make_sequence_imp<sequence<Seq...>, Beg, End>
+    template <size_t Beg0, size_t End0, size_t... Seq>
+    struct make_sequence_imp<sequence<Seq...>, Beg0, End0>
     {
-        using type = typename make_sequence_imp<sequence<Seq..., Beg>, Beg + 1, End>::type;
+        using type = typename make_sequence_imp<sequence<Seq..., Beg0>, Beg0 + 1, End0>::type;
     };
 
-    template <size_t End, size_t... Seq>
-    struct make_sequence_imp<sequence<Seq...>, End, End>
+    template <size_t End0, size_t... Seq>
+    struct make_sequence_imp<sequence<Seq...>, End0, End0>
     {
         using type = sequence<Seq...>;
     };
