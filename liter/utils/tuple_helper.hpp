@@ -19,7 +19,6 @@ struct TuplePrinter
         TuplePrinter<Tuple, N-1>::print(t);
         cout << ", " << std::get<N-1>(t);
     };
-
 };
 
 template <typename Tuple>
