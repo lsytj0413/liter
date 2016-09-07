@@ -184,4 +184,16 @@ void tp_for_each(Func&& fn, Tuple&& tp){
 };
 
 
+template <typename... TArgs, int... Indexes>
+decltype(auto) reverse_imp(std::tuple<TArgs...>&& tp, sequence<Indexes...>&&){
+    return std::make_tuple(std::get<Indexes>(std::forward<std::tuple<TArgs>>(tp))...);
+};
+
+template <typename... TArgs>
+decltype(auto) reverse(std::tuple<TArgs...>&& tp){
+    return reverse_imp(std::forward<std::tuple<TArgs...>>(tp),\
+                       typename make_sequence<0, std::tuple_size<decltype(tp)>::value, -1>::type()
+                       );
+};
+
 }
