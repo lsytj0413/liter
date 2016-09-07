@@ -196,4 +196,52 @@ decltype(auto) reverse(std::tuple<TArgs...>&& tp){
                        );
 };
 
+template <typename F, typename... TArgs, int... Indexes>
+decltype(auto) apply(F&& fn, std::tuple<TArgs...>&& tp, sequence<Indexes...>&&){
+    return apply(std::forward<F>(fn),
+                 std::forward<TArgs>(std::get<Indexes>(tp))...
+                 );
+};
+
+template <typename F, typename... TArgs>
+decltype(auto) apply(F&& fn, std::tuple<TArgs...>&& tp){
+    return apply(std::forward<F>(fn),
+                 std::forward<std::tuple<TArgs...>>(tp),
+                 typename make_sequence<std::tuple_size<decltype(tp)>::value>::type()
+                 );
+};
+
+namespace detail
+{
+
+template <int N, typename T1, typename T2>
+using pair_type = std::pair<typename std::tuple_element<N, T1>::type,
+                            typename std::tuple_element<N, T2>::type>;
+
+template <int N, typename T1, typename T2>
+pair_type<N, T1, T2> pair(const T1& tp1, const T2& tp2){
+    return std::make_pair(std::get<N>(tp1),
+                          std::get<N>(tp2)
+                          );
+};
+
+template <int... Indexes, typename T1, typename T2>
+decltype(auto) pairs_helper(sequence<Indexes...>, const T1& tp1, const T2& tp2){
+    return std::make_tuple(pair<Indexes>(tp1, tp2)...);
+};
+
+}
+
+template <typename T1, typename T2>
+decltype(auto) zip(T1&& tp1, T2&& tp2){
+    static_assert(std::tuple_size<T1>::value == std::tuple_size<T2>::value,
+                  "tuples should be the same size."
+                  );
+
+    return detail::pairs_helper(typename make_sequence<std::tuple_size<T1>::value>::type(),
+                                std::forward<T1>(tp1),
+                                std::forward<T2>(tp2)
+                                );
+};
+
 }
