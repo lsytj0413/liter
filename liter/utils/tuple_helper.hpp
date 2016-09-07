@@ -155,4 +155,33 @@ void GetArgByIndex1(int index, std::tuple<Arg, TArgs...>& tp)
     }
 };
 
+namespace detail
+{
+
+template <typename Func, typename Last>
+void for_each_impl(Func&& fn, Last&& last){
+    fn(std::forward<Last>(last));
+};
+
+template <typename Func, typename First, typename... Rest>
+void for_each_impl(Func&& fn, First&& first, Rest&&... rest){
+    fn(std::forward<First>(first));
+    for_each_impl(std::forward<Func>(fn), std::forward<Rest>(rest)...);
+};
+
+template <typename Func, int... Indexes, typename... TArgs>
+void for_each_helper(Func&& fn, sequence<Indexes...>, std::tuple<TArgs...>&& tp){
+    for_each_impl(std::forward<Func>(fn), std::forward<TArgs>(std::get<Indexes>(tp))...);
+};
+
+}
+
+template <typename Func, typename Tuple>
+void tp_for_each(Func&& fn, Tuple&& tp){
+    for_each_helper(std::forward<Func>(fn),
+                    typename make_sequence<std::tuple_size<Tuple>::value>::type(),
+                    std::forward<Tuple>(tp));
+};
+
+
 }
