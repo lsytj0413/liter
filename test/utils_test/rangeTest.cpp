@@ -1,7 +1,7 @@
 #include "rangeTest.h"
 
 #include <gtest/gtest.h>
-#include <liter/utils/range.h>
+#include <liter/utils/range.hpp>
 #include <vector>
 using std::vector;
 
