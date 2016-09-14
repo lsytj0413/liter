@@ -15,6 +15,8 @@ SET (TEST_SRC
   utils_test/stringUtilTest.cpp
   utils_test/rangeTest.h
   utils_test/rangeTest.cpp
+  utils_test/sequenceTest.h
+  utils_test/sequenceTest.cpp
   )
 
 include_directories(../)
