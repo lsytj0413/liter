@@ -2,6 +2,7 @@
 
 #include <liter/utils/Singleton.h>
 
+
 class S : public liter::Singleton<S>
 {
     friend class liter::Singleton<S>;

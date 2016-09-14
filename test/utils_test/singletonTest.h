@@ -5,5 +5,4 @@
 
 class SingletonTest : public testing::Test
 {
-    
 };
