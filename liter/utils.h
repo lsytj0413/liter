@@ -7,7 +7,7 @@ namespace liter
 {
 
 template <typename T, typename ...TArgs>
-auto variadic_sum(T&& v1, TArgs&&... args) -> decltype(v1 + variadic_sum(args...))
+decltype(auto) variadic_sum(T&& v1, TArgs&&... args)
 {
     return v1 + variadic_sum(std::forward<TArgs>(args)...);
 }

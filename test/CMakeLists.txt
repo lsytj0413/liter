@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT (test_liter)
 
-set (CMAKE_CXX_FLAGS "-std=c++11")
+set (CMAKE_CXX_FLAGS "-std=c++14")
 
 SET (TEST_SRC
   main.cpp
@@ -17,6 +17,8 @@ SET (TEST_SRC
   utils_test/rangeTest.cpp
   utils_test/sequenceTest.h
   utils_test/sequenceTest.cpp
+  utils_test/utilsTest.cpp
+  utils_test/utilsTest.h
   )
 
 include_directories(../)
