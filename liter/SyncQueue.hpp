@@ -5,7 +5,7 @@
 #include <mutex>
 #include <condition_variable>
 
-#include <liter/utils/uncopyable.h>
+#include <liter/uncopyable.h>
 
 
 namespace liter
@@ -24,10 +24,11 @@ public:
     {};
 
     void put(const T& x){
-        std::lock_guard<std::mutex> locker(m_mutex);
+        add(x);
+    };
 
-        m_queue.push_back(x);
-        m_not_empty.notify_one();
+    void put(T&& x){
+        add(std::forward<T>(x));
     };
 
     void take(T& x){
@@ -40,6 +41,15 @@ public:
         m_queue.pop_front();
     };
 
+    void take(std::list<T>& list){
+        std::unique_lock<std::mutex> locker(m_mutex);
+        m_not_empty.wait(locker, [this](){
+                return !m_queue.empty();
+            });
+
+        list = std::move(m_queue);
+    };
+
     bool empty() {
         std::lock_guard<std::mutex> locker(m_mutex);
         return m_queue.empty();
@@ -48,6 +58,15 @@ public:
     size_t size() {
         std::lock_guard<std::mutex> locker(m_mutex);
         return m_queue.size();
+    };
+
+private:
+    template <typename F>
+    void add(F&& f){
+        std::unique_lock<std::mutex> locker(m_mutex);
+
+        m_queue.push_back(std::forward<F>(f));
+        m_not_empty.notify_one();
     };
 };
 
