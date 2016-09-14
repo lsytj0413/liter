@@ -5,7 +5,7 @@
 using std::cout;
 using std::endl;
 
-#include <liter/utils/sequence.h>
+#include <liter/sequence.h>
 
 
 namespace liter

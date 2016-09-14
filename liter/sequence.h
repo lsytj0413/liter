@@ -35,4 +35,30 @@ public:
     using type = typename make_sequence_imp<sequence<>, Beg, End>::type;
 };
 
+template <typename... Seq>
+struct reverse_sequence_imp;
+
+template <size_t... Seq1, size_t head, size_t... Seq2>
+struct reverse_sequence_imp<sequence<head, Seq1...>, sequence<Seq2...>>
+{
+    using type = typename reverse_sequence_imp<sequence<Seq1...>,
+                                               sequence<head, Seq2...>>::type;
+};
+
+template <size_t... Seq>
+struct reverse_sequence_imp<sequence<>, sequence<Seq...>>
+{
+    using type = sequence<Seq...>;
+};
+
+template <typename... Seq>
+struct reverse_sequence;
+
+template <size_t... Seq>
+struct reverse_sequence<sequence<Seq...>>
+{
+    using type = typename reverse_sequence_imp<sequence<Seq...>, sequence<>>::type;
+};
+
+
 }
