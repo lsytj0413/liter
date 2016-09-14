@@ -1,7 +1,7 @@
 #include "sequenceTest.h"
 
 #include <gtest/gtest.h>
-#include <liter/sequence.h>
+#include <liter/sequence.hpp>
 #include <type_traits>
 
 
