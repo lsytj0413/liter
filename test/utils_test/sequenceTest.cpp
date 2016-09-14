@@ -48,3 +48,41 @@ TEST_F(SequenceTest, testReverseZeroNum)
 
     EXPECT_EQ(v, true);
 }
+
+
+TEST_F(SequenceTest, testReverseOneNum)
+{
+    using f = typename liter::reverse_sequence<liter::sequence<1>>::type;
+    auto v = std::is_same<f, liter::sequence<1>>::value;
+
+    EXPECT_EQ(v, true);
+
+    using f1 = typename liter::reverse_sequence<liter::sequence<0>>::type;
+    auto v1 = std::is_same<f1, liter::sequence<0>>::value;
+
+    EXPECT_EQ(v1, true);
+
+    using f2 = typename liter::reverse_sequence<liter::sequence<73>>::type;
+    auto v2 = std::is_same<f2, liter::sequence<73>>::value;
+
+    EXPECT_EQ(v2, true);
+}
+
+
+TEST_F(SequenceTest, testReverseMultiNum)
+{
+    using f = typename liter::reverse_sequence<liter::sequence<0, 2, 3>>::type;
+    auto v = std::is_same<f, liter::sequence<3, 2, 0>>::value;
+
+    EXPECT_EQ(v, true);
+
+    using f1 = typename liter::reverse_sequence<liter::sequence<0, 2>>::type;
+    auto v1 = std::is_same<f1, liter::sequence<2, 0>>::value;
+
+    EXPECT_EQ(v1, true);
+
+    using f2 = typename liter::reverse_sequence<liter::sequence<2, 3, 57, 43>>::type;
+    auto v2 = std::is_same<f2, liter::sequence<43, 57, 3, 2>>::value;
+
+    EXPECT_EQ(v2, true);
+}
