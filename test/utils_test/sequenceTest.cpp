@@ -106,3 +106,36 @@ TEST_F(SequenceTest, testReverseMultiNum)
 
     EXPECT_EQ(v2, true);
 }
+
+
+TEST_F(SequenceTest, testMultiNumIncr)
+{
+    using f = typename liter::make_sequence<5>::type;
+    auto v = std::is_same<f, liter::sequence<0, 1, 2, 3, 4>>::value;
+
+    EXPECT_EQ(v, true);
+
+    using f1 = typename liter::make_sequence<5, 2, 1>::type;
+    auto v1 = std::is_same<f1, liter::sequence<2, 3, 4>>::value;
+
+    EXPECT_EQ(v1, true);
+
+    using f2 = typename liter::make_sequence<10, 4, 2>::type;
+    auto v2 = std::is_same<f2, liter::sequence<4, 6, 8>>::value;
+
+    EXPECT_EQ(v2, true);
+}
+
+
+TEST_F(SequenceTest, testMultiNumDesc)
+{
+    using f = typename liter::make_sequence<0, 5, -1>::type;
+    auto v = std::is_same<f, liter::sequence<5, 4, 3, 2, 1>>::value;
+
+    EXPECT_EQ(v, true);
+
+    using f1 = typename liter::make_sequence<1, 5, -2>::type;
+    auto v1 = std::is_same<f1, liter::sequence<5, 3>>::value;
+
+    EXPECT_EQ(v1, true);
+}
