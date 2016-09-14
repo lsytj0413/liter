@@ -1,7 +1,7 @@
 #include "binaryTest.h"
 
 #include <gtest/gtest.h>
-#include <liter/utils/binary.hpp>
+#include <liter/binary.hpp>
 
 
 TEST_F(BinaryTest, testBinary8)

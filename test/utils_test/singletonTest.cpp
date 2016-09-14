@@ -1,6 +1,6 @@
 #include "singletonTest.h"
 
-#include <liter/utils/Singleton.h>
+#include <liter/Singleton.h>
 
 
 class S : public liter::Singleton<S>

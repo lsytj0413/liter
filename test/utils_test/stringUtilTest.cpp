@@ -1,7 +1,8 @@
 #include "stringUtilTest.h"
 
 #include <gtest/gtest.h>
-#include <liter/utils/string_utils.h>
+#include <liter/string_utils.h>
+
 
 using namespace liter;
 
