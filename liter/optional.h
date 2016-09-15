@@ -29,7 +29,7 @@ public:
 
     optional(const optional& rhs)
     {
-        if (rhs.is_init())
+        if (rhs.init_p())
         {
             assign(rhs);
         }
@@ -81,7 +81,7 @@ private:
 
     void assign(const optional& rhs)
     {
-        if (rhs.is_init())
+        if (rhs.init_p())
         {
             copy(rhs.m_data);
             m_init = true;

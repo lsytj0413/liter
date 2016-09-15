@@ -3,7 +3,7 @@
 #include <functional>
 using std::function;
 
-#include "liter/utils/optional.h"
+#include "liter/optional.h"
 
 
 namespace liter
@@ -22,9 +22,9 @@ struct Lazy
         };
     }
 
-    T& value()
+    T value()
     {
-        if (!m_func.is_init())
+        if (!init_p())
         {
             m_value = m_func();
         }
@@ -43,9 +43,9 @@ private:
 };
 
 template <typename Func, typename... TArgs>
-Lazy<typename std::result_of<Func(TArgs...)>::type> lazy(Func&& fun, TArgs&&... args)
+Lazy<typename std::result_of<Func(TArgs...)>::type> lazy(Func&& fn, TArgs&&... args)
 {
-    return Lazy<typename std::result_of<Func(TArgs...)>::type>(std::forward<Func>(fun),
+    return Lazy<typename std::result_of<Func(TArgs...)>::type>(std::forward<Func>(fn),
                                                                std::forward<TArgs>(args)...);
 }
 
