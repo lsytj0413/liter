@@ -7,7 +7,7 @@ namespace liter
 {
 
 template <size_t... Seq>
-struct sequence;
+struct sequence{};
 
 template <size_t End, size_t Beg = 0, int step = 1>
 struct make_sequence

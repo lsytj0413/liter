@@ -1,7 +1,7 @@
 #pragma once
 
 #include <tuple>
-#include "liter/sequence.h"
+#include "liter/sequence.hpp"
 
 
 namespace liter
@@ -20,7 +20,7 @@ template <typename... TArgs>
 void functor_imp(std::tuple<TArgs...> args)
 {
     functor_imp(args,
-                make_sequence<std::tuple_size<decltype(args)>::value, 1>::type());
+                typename make_sequence<std::tuple_size<decltype(args)>::value, 1>::type());
 };
 
 }
