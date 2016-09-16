@@ -245,6 +245,68 @@ public:
             });
         return r;
     };
+
+    template <typename KeyFn, typename ValueFn>
+    decltype(auto) group_by(const KeyFn& fnk, const ValueFn& fnv) {
+        using key_type = decltype(std::declval<KeyFn>()(std::declval<value_type>()));
+        using val_type = decltype(std::declval<ValueFn>()(std::declval<value_type>()));
+
+        std::multimap<key_type, val_type> r;
+        std::for_each(begin(), end(), [&r, &fnk, &fnv](value_type item) {
+                r.insert(std::make_pair(fnk(item), fnv(item)));
+            });
+        return r;
+    };
+
+    template <typename T>
+    decltype(auto) cast() {
+        std::function<T(value_type)> f = [](value_type item){
+            return static_cast<T>(item);
+        };
+
+        return linq<transformed_range<std::function<T(value_type)>, R>>(select(f));
+    };
+
+    template <typename R2>
+    bool equals(const linq<R2>& other) const {
+        return count() == other.count() &&
+                std::equal(begin(), end(), other.begin());
+    };
+
+    template <typename R2, typename F>
+    bool equals(const linq<R2>& other, const F& f) const {
+        return count() == other.count() &&
+                std::equal(begin(), end(), other.begin(), f);
+    };
+
+    template <typename R2>
+    bool operator==(const linq<R2>& other) const {
+        return equals(other);
+    };
+
+    template <typename R2>
+    bool operator!=(const linq<R2>& other) const {
+        return !(*this == other);
+    };
+};
+
+template <template <typename T> class IteratorRange, typename R>
+using Range = IteratorRange<decltype(std::begin(std::declval<R>()))>;
+
+template <typename R>
+using iterator_range = Range<boost::iterator_range, R>;
+
+template <typename R>
+linq<iterator_range<R>> from(const R& range){
+    return linq<iterator_range<R>>(iterator_range<R>(range));
+};
+
+template <typename... T>
+decltype(auto) zip(const T&... cont) {
+    auto zip_begin = boost::make_zip_iterator(boost::make_tuple(std::begin(cont)...));
+    auto zip_end = boost::make_zip_iterator(boost::make_tuple(std::end(cont)...));
+
+    return boost::make_iterator_range(zip_begin, zip_end);
 };
 
 }
