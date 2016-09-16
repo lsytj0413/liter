@@ -1,6 +1,8 @@
 #pragma once
 
 #include <numeric>
+#include <vector>
+#include <map>
 
 #include <boost/algorithm/minmax_element.hpp>
 #include <boost/iterator/zip_iterator.hpp>
@@ -173,6 +175,76 @@ public:
         return linq<boost::select_first_range<R>>(boost::adaptors::keys(m_linq_range));
     };
 
+    decltype(auto) values() const {
+        return linq<boost::select_second_const_range<R>>(boost::adaptors::values(m_linq_range));
+    };
+
+    template <typename T>
+    decltype(auto) take(T n) const {
+        return linq(slice(m_linq_range, 0, n));
+    };
+
+    template <typename T>
+    decltype(auto) take(T start, T end) const {
+        return linq(slice(m_linq_range, start, end));
+    };
+
+    std::vector<value_type> to_vector() {
+        return std::vector<value_type>(begin(), end());
+    };
+
+    template <typename F>
+    decltype(auto) take_while(const F& f) const {
+        return linq(boost::make_iterator_range(begin(),
+                                               std::find_if(begin(), end(), f)));
+    };
+
+    template <typename T>
+    decltype(auto) skip(T n) const {
+        return linq(boost::make_iterator_range(begin() + n, end()));
+    };
+
+    template <typename F>
+    decltype(auto) skip_while(const F& f) const {
+        return linq(boost::make_iterator_range(std::find_if_not(begin(), end(), f),
+                                               end()));
+    };
+
+    template <typename T>
+    decltype(auto) step(T n) {
+        return stride(m_linq_range, n);
+    };
+
+    decltype(auto) indirect() {
+        return linq<boost::indirected_range<R>>(boost::adaptors::indirect(m_linq_range));
+    };
+
+    template <typename R2>
+    decltype(auto) concat(const R2& other) {
+        return linq<joined_range<R, const R2>>(boost::join(m_linq_range, other));
+    };
+
+    template <typename R2>
+    void except(const R2& other, std::vector<value_type>& r) {
+        std::set_difference(begin(), end(), std::begin(other), std::end(other), back_inserter(r));
+    };
+
+    template <typename R2>
+    bool includes(const R2& other) const {
+        return std::includes(begin(), end(), std::begin(other), std::end(other));
+    };
+
+    template <typename Fn>
+    std::multimap<typename std::result_of<Fn(value_type)>::type, value_type>
+    group_by(const Fn& f) {
+        using key_type = decltype(std::declval<Fn>()(std::declval<value_type>()));
+
+        std::multimap<key_type, value_type> r;
+        std::for_each(begin(), end(), [&r, &f](value_type item) {
+                r.insert(std::make_pair(f(item), item));
+            });
+        return r;
+    };
 };
 
 }
