@@ -15,12 +15,19 @@ SET (LITER_SRC
   http/HttpRequest.h
   http/HttpResponse.cpp
   http/HttpResponse.h
-  utils/binary.h
-  utils/sequence.h
-  utils/Singleton.h
-  utils/uncopyable.h
-  utils/utils.h
+  binary.hpp
+  sequence.hpp
+  Singleton.h
+  uncopyable.h
+  utils.h
   )
+
+# boost
+set(BOOST_ROOT "~/workspace/3rd/boost_1_61_0")
+include_directories(${Boost_INCLUDE_DIRECTORY})
+
 
 include_directories(../)
 add_executable (liter ${LITER_SRC})
+
+target_link_libraries(liter ${Boost_LIBRARIES})

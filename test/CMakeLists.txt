@@ -31,5 +31,9 @@ include_directories(../)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
+# boost
+set(BOOST_ROOT "~/workspace/3rd/boost_1_61_0")
+include_directories(${Boost_INCLUDE_DIRECTORY})
+
 add_executable(main ${TEST_SRC})
-target_link_libraries(main ${GTEST_LIBRARIES} pthread)
+target_link_libraries(main ${GTEST_LIBRARIES} pthread ${Boost_LIBRARIES})
