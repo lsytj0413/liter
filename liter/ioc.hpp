@@ -22,9 +22,20 @@ public:
     ~Ioc(void){};
 
     template <typename T, typename Depend, typename... TArgs>
-    void register_type(const std::string& key){
+    typename std::enable_if<!std::is_base_of<T, Depend>::value>::type
+    register_type(const std::string& key){
         std::function<T*(TArgs...)> fn = [](TArgs... args){
             return new T(new Depend(args...));
+        };
+
+        register_type(key, std::move(fn));
+    };
+
+    template <typename T, typename Depend, typename... TArgs>
+    typename std::enable_if<std::is_base_of<T, Depend>::value>::type
+    register_type(const std::string& key){
+        std::function<T*(TArgs...)> fn = [](TArgs... args){
+            return new Depend(args...);
         };
 
         register_type(key, std::move(fn));
