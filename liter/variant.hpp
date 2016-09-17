@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <liter/function_traits.hpp>
+
 
 namespace liter
 {
@@ -172,6 +174,26 @@ public:
         return IndexOf<T, Types...>::value;
     };
 
+    template <typename F>
+    void visit(F&& f){
+        using T = typename liter::function_traits<F>::template args<0>::type;
+
+        if (is<T>()){
+            f(get<T>());
+        }
+    };
+
+    template <typename F, typename... Rest>
+    void visit(F&& f, Rest&&... rest){
+        using T = typename liter::function_traits<F>::template args<0>::type;
+        if (is<T>()){
+            f(get<T>());
+        }
+        else {
+            visit(std::forward<Rest>(rest)...);
+        }
+    };
+
     bool operator== (const variant& rhs) const
     {
         return m_type_index == rhs.m_type_index;
@@ -181,7 +203,6 @@ public:
     {
         return m_type_index < rhs.m_type_index;
     };
-
 private:
     void destroy(const std::type_index& index, void *buf)
     {

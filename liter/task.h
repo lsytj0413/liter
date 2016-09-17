@@ -2,7 +2,15 @@
 
 #include <future>
 #include <functional>
+#include <string>
+#include <map>
+#include <vector>
+using std::string;
 using std::function;
+
+#include <liter/any.hpp>
+#include <liter/uncopyable.h>
+#include <liter/variant.hpp>
 
 
 namespace liter
@@ -48,6 +56,63 @@ public:
                 std::future<R> last_fn = std::async(func, std::forward<TArgs>(args)...);
                 return std::async(f, last_fn.get()).get();
             });
+    };
+};
+
+
+class task_group : public uncopyable
+{
+private:
+    using return_variant = variant<int, string, double, short, unsigned int>;
+
+    std::multimap<return_variant, any> m_group;
+    std::vector<std::shared_future<void>> m_void_group;
+
+public:
+    task_group(){};
+    ~task_group(){};
+
+    template <typename R, typename = typename std::enable_if<!std::is_same<R, void>::value>::type>
+    void run(task<R()>&& task){
+        m_group.emplace(R(), task.run());
+    };
+
+    void run(task<void()>&& task){
+        m_void_group.push_back(task.run());
+    };
+
+    template <typename F>
+    void run(F&& f){
+        run(task<typename std::result_of<F()>::type>(std::forward<F>(f)));
+    };
+
+    template <typename F, typename... Funs>
+    void run(F&& first, Funs&&... rest){
+        run(std::forward<F>(first));
+        run(std::forward<Funs>(rest)...);
+    };
+
+    void wait(){
+        for (auto itor = m_group.begin(); itor != m_group.end(); ++itor){
+            auto&& vrt = itor->first;
+            vrt.visit([&](int a){
+                    future_get<int>(itor->second);
+                },[&](double b){
+                    future_get<double>(itor->second);
+                },[&](std::string v){
+                    future_get<std::string>(itor->second);
+                },[&](short v){
+                    future_get<short>(itor->second);
+                },[&](unsigned int v){
+                    future_get<unsigned int>(itor->second);
+                });
+        }
+    }
+
+private:
+    template <typename T>
+    void future_get(any& f){
+        f.cast<std::shared_future<T>>().get();
     };
 };
 
