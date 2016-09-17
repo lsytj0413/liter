@@ -44,36 +44,33 @@ struct function_traits<std::function<Ret(TArgs...)>> : public function_traits<Re
 
 #define FUNCTION_TRAITS(...) \
     template <typename ReturnType, typename ClassType, typename... TArgs>\
-    struct function_traits<ReturnType(ClassType::*)(TArgs...) __VA_ARGS__> : function_traits<ReturnType(TArgs...)>{}; \
+    struct function_traits<ReturnType(ClassType::*)(TArgs...) __VA_ARGS__> : function_traits<ReturnType(TArgs...)>{};
 
 FUNCTION_TRAITS()
 FUNCTION_TRAITS(const)
 FUNCTION_TRAITS(volatile)
 FUNCTION_TRAITS(const volatile)
 
-        ;
+
 template <typename Callable>
 struct function_traits : function_traits<decltype(&Callable::operator())>
 {};
 
 template <typename Function>
-typename function_traits<Function>::stl_function_type
-to_function(const Function& lambda)
+auto to_function(const Function& lambda)
 {
     return static_cast<typename function_traits<Function>::stl_function_type>(lambda);
 }
 
 template <typename Function>
-typename function_traits<Function>::stl_function_type
-to_function(const Function&& lambda)
+auto to_function(const Function&& lambda)
 {
     return static_cast<typename function_traits<Function>::stl_function_type>(
         std::forward<Function>(lambda));
 }
 
 template <typename Function>
-typename function_traits<Function>::pointer
-to_function_pointer(const Function& lambda)
+auto to_function_pointer(const Function& lambda)
 {
     return static_cast<typename function_traits<Function>::pointer>(lambda);
 }
