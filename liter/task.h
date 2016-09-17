@@ -120,4 +120,27 @@ private:
     };
 };
 
+template <typename Range>
+auto when_all(Range&& range){
+    using return_type = typename Range::value_type::return_type;
+
+    auto task = [&range](){
+        std::vector<std::shared_future<return_type>> fv;
+        for (auto&& task : range){
+            fv.emplace_back(task.run());
+        }
+
+        std::vector<return_type> v;
+        for (auto&& item : fv){
+            v.emplace_back(item.get());
+        }
+
+        return v;
+    };
+
+    return task;
+};
+
+
+
 }
