@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
 using std::string;
 using std::function;
 
@@ -192,6 +193,34 @@ auto when_any(Range&& range){
     return task;
 };
 
+template <typename Iterator, typename F>
+void parallel_foreach(Iterator&& begin, Iterator&& end, F&& f){
+    auto partNum = std::thread::hardware_concurrency();
+    auto blockSize = std::distance(begin, end) / partNum;
+    Iterator last = begin;
 
+    if (blockSize > 0){
+        std::advance(last, (partNum-1)*blockSize);
+    }
+    else {
+        last = end;
+        blockSize = 1;
+    }
+
+    std::vector<std::future<void>> futures;
+    for(; begin != last; std::advance(begin, blockSize)){
+        futures.emplace_back(std::async([begin, blockSize, &f](){
+                    std::for_each(begin, begin + blockSize, f);
+                }));
+    }
+
+    futures.emplace_back(std::async([&begin, &end, &f](){
+                std::for_each(begin, end, f);
+            }));
+
+    std::for_each(futures.begin(), futures.end(), [](std::future<void>& f){
+            f.get();
+        });
+};
 
 }
