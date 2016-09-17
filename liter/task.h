@@ -141,6 +141,57 @@ auto when_all(Range&& range){
     return task;
 };
 
+namespace detail
+{
+
+template <typename R>
+struct RangeTrait
+{
+    using type = R;
+};
+
+template <typename R>
+struct RangeTrait<std::shared_future<R>>
+{
+    using type = R;
+};
+
+template <typename Range>
+auto transform(Range&& range){
+    using return_type = typename Range::value_type::return_type;
+
+    std::vector<std::shared_future<return_type>> fv;
+    for (auto&& task : range){
+        fv.emplace_back(task.run());
+    }
+
+    return fv;
+};
+
+template <typename Range>
+auto get_any_result_pair(Range&& fv){
+    size_t size = fv.size();
+
+    for(;;){
+        for(size_t i = 0; i < size; ++i){
+            if(fv[i].wait_for(std::chrono::milliseconds(1)) == std::future_status::ready){
+                return std::make_pair(i, fv[i].get());
+            }
+        }
+    }
+};
+
+}
+
+template <typename Range>
+auto when_any(Range&& range){
+    auto task = [&range](){
+        return detail::get_any_result_pair(detail::transform(range));
+    };
+
+    return task;
+};
+
 
 
 }
