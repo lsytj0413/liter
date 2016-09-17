@@ -186,6 +186,7 @@ public:
     template <typename F, typename... Rest>
     void visit(F&& f, Rest&&... rest){
         using T = typename liter::function_traits<F>::template args<0>::type;
+
         if (is<T>()){
             f(get<T>());
         }

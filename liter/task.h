@@ -11,6 +11,7 @@ using std::function;
 #include <liter/any.hpp>
 #include <liter/uncopyable.h>
 #include <liter/variant.hpp>
+#include <liter/function_traits.hpp>
 
 
 namespace liter
@@ -94,20 +95,23 @@ public:
 
     void wait(){
         for (auto itor = m_group.begin(); itor != m_group.end(); ++itor){
-            auto&& vrt = itor->first;
-            vrt.visit([&](int a){
-                    future_get<int>(itor->second);
-                },[&](double b){
-                    future_get<double>(itor->second);
-                },[&](std::string v){
-                    future_get<std::string>(itor->second);
-                },[&](short v){
-                    future_get<short>(itor->second);
-                },[&](unsigned int v){
-                    future_get<unsigned int>(itor->second);
-                });
+            // itor->first.visit([&](int a){
+            //         future_get<int>(itor->second);
+            //     },[&](double b){
+            //         future_get<double>(itor->second);
+            //     },[&](std::string v){
+            //         future_get<std::string>(itor->second);
+            //     },[&](short v){
+            //         future_get<short>(itor->second);
+            //     },[&](unsigned int v){
+            //         future_get<unsigned int>(itor->second);
+            //     });
         }
-    }
+
+        for (auto itor = m_void_group.begin(); itor != m_void_group.end(); ++itor){
+            itor->get();
+        }
+    };
 
 private:
     template <typename T>
