@@ -23,6 +23,8 @@ SET (TEST_SRC
   utils_test/callableTest.cpp
   utils_test/lazyTest.h
   utils_test/lazyTest.cpp
+  utils_test/functionTraitsTest.h
+  utils_test/functionTraitsTest.cpp
   )
 
 include_directories(../)
