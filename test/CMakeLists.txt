@@ -27,6 +27,8 @@ SET (TEST_SRC
   utils_test/functionTraitsTest.cpp
   utils_test/anyTest.h
   utils_test/anyTest.cpp
+  utils_test/aspectTest.h
+  utils_test/aspectTest.cpp
   )
 
 include_directories(../)

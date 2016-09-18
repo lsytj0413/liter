@@ -22,8 +22,8 @@ namespace liter
         enum { value = std::is_same<decltype(Check<T>(0)), std::true_type>::value }; \
     };
 
-HAS_MEMBER(Before)
-HAS_MEMBER(After)
+HAS_MEMBER(before)
+HAS_MEMBER(after)
 
 template <typename Func, typename... TArgs>
 struct aspect : uncopyable
@@ -35,32 +35,32 @@ public:
     aspect(Func&& f) : m_func(std::forward<Func>(f)){};
 
     template <typename T>
-    typename std::enable_if<has_member_Before<T, TArgs...>::value && has_member_After<T, TArgs...>::value>::type
+    typename std::enable_if<has_member_before<T, TArgs...>::value && has_member_after<T, TArgs...>::value>::type
     invoke(TArgs&&... args, T&& aspect){
-        aspect.Before(std::forward<TArgs>(args)...);
+        aspect.before(std::forward<TArgs>(args)...);
         m_func(std::forward<TArgs>(args)...);
-        aspect.After(std::forward<TArgs>(args)...);
+        aspect.after(std::forward<TArgs>(args)...);
     };
 
     template <typename T>
-    typename std::enable_if<has_member_Before<T, TArgs...>::value && !has_member_After<T, TArgs...>::value>::type
+    typename std::enable_if<has_member_before<T, TArgs...>::value && !has_member_after<T, TArgs...>::value>::type
     invoke(TArgs&&... args, T&& aspect){
-        aspect.Before(std::forward<TArgs>(args)...);
+        aspect.before(std::forward<TArgs>(args)...);
         m_func(std::forward<TArgs>(args)...);
     };
 
     template <typename T>
-    typename std::enable_if<!has_member_Before<T, TArgs...>::value && has_member_After<T, TArgs...>::value>::type
+    typename std::enable_if<!has_member_before<T, TArgs...>::value && has_member_after<T, TArgs...>::value>::type
     invoke(TArgs&&... args, T&& aspect){
         m_func(std::forward<TArgs>(args)...);
-        aspect.After(std::forward<TArgs>(args)...);
+        aspect.after(std::forward<TArgs>(args)...);
     };
 
     template <typename Head, typename... Tail>
     void invoke(TArgs&&... args, Head&& headAspect, Tail&&... tailAspect){
-        headAspect.Before(std::forward<TArgs>(args)...);
+        headAspect.before(std::forward<TArgs>(args)...);
         invoke(std::forward<TArgs>(args)..., std::forward<Tail>(tailAspect)...);
-        headAspect.After(std::forward<TArgs>(args)...);
+        headAspect.after(std::forward<TArgs>(args)...);
     };
 };
 
