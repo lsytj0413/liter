@@ -219,3 +219,64 @@ TEST_F(AspectTest, testOneInvoke)
 
     g = 0;
 }
+
+
+TEST_F(AspectTest, testMultiInvokeBefore)
+{
+    liter::invoke<A, A, A>(test, 10);
+    EXPECT_EQ(30, g);
+
+    g = 0;
+}
+
+
+TEST_F(AspectTest, testMultiInvokeAfter)
+{
+    liter::invoke<B, B, B>(test, 10);
+    EXPECT_EQ(-30, g);
+
+    g = 0;
+}
+
+
+TEST_F(AspectTest, testMultiInvokeMix)
+{
+    liter::invoke<A, B, A>(test, 10);
+    EXPECT_EQ(10, g);
+
+    g = 0;
+
+    liter::invoke<A, B, B>(test, 10);
+    EXPECT_EQ(-10, g);
+
+    g = 0;
+
+    g = 10;
+    liter::invoke<A, B, C>(test, 10);
+    EXPECT_EQ(10, g);
+
+    g = 0;
+
+    g = 100;
+    liter::invoke<A, C, C>(test, 10);
+    EXPECT_EQ(110, g);
+
+    g = 0;
+
+    g = 100;
+    liter::invoke<B, C, C>(test, 10);
+    EXPECT_EQ(90, g);
+
+    g = 0;
+}
+
+
+TEST_F(AspectTest, testMultiInvoke)
+{
+    g = 10;
+
+    liter::invoke<C, C, C>(test, 100);
+    EXPECT_EQ(10, g);
+
+    g = 0;
+}

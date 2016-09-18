@@ -57,8 +57,23 @@ public:
     };
 
     template <typename Head, typename... Tail>
-    void invoke(TArgs&&... args, Head&& headAspect, Tail&&... tailAspect){
+    typename std::enable_if<has_member_before<Head, TArgs...>::value && has_member_after<Head, TArgs...>::value>::type
+    invoke(TArgs&&... args, Head&& headAspect, Tail&&... tailAspect){
         headAspect.before(std::forward<TArgs>(args)...);
+        invoke(std::forward<TArgs>(args)..., std::forward<Tail>(tailAspect)...);
+        headAspect.after(std::forward<TArgs>(args)...);
+    };
+
+    template <typename Head, typename... Tail>
+    typename std::enable_if<has_member_before<Head, TArgs...>::value && !has_member_after<Head, TArgs...>::value>::type
+    invoke(TArgs&&... args, Head&& headAspect, Tail&&... tailAspect){
+        headAspect.before(std::forward<TArgs>(args)...);
+        invoke(std::forward<TArgs>(args)..., std::forward<Tail>(tailAspect)...);
+    };
+
+    template <typename Head, typename... Tail>
+    typename std::enable_if<!has_member_before<Head, TArgs...>::value && has_member_after<Head, TArgs...>::value>::type
+    invoke(TArgs&&... args, Head&& headAspect, Tail&&... tailAspect){
         invoke(std::forward<TArgs>(args)..., std::forward<Tail>(tailAspect)...);
         headAspect.after(std::forward<TArgs>(args)...);
     };
