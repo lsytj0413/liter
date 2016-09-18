@@ -4,6 +4,7 @@
 #include <typeindex>
 using std::unique_ptr;
 
+
 namespace liter
 {
 
@@ -42,7 +43,6 @@ public:
         if(!is<U>())
         {
             throw std::logic_error{"bad case"};
-
         }
 
         auto derived = dynamic_cast<Derived<U>*>(m_ptr.get());
