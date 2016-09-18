@@ -158,3 +158,64 @@ TEST_F(AspectTest, TestHasMemberInheVir)
     auto v2 = has_member_vir_member<TestHasMember, int, char>::value;
     EXPECT_EQ(v2, false);
 }
+
+
+int g = 0;
+
+class A
+{
+public:
+    void before(int i){
+        g += i;
+    };
+};
+
+class B
+{
+public:
+    void after(int i){
+        g -= i;
+    };
+};
+
+class C
+{
+public:
+    void before(int i){
+        g += i;
+    };
+
+    void after(int i){
+        g -= i;
+    };
+};
+
+void test(int i){};
+
+TEST_F(AspectTest, testOneInvokeBefore)
+{
+    liter::invoke<A>(test, 100);
+    EXPECT_EQ(100, g);
+
+    g = 0;
+}
+
+
+TEST_F(AspectTest, testOneInvokeAfter)
+{
+    liter::invoke<B>(test, 10);
+    EXPECT_EQ(-10, g);
+
+    g = 0;
+}
+
+
+TEST_F(AspectTest, testOneInvoke)
+{
+    g = 10;
+
+    liter::invoke<C>(test, 100);
+    EXPECT_EQ(g, 10);
+
+    g = 0;
+}

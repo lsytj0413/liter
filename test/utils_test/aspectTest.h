@@ -4,4 +4,5 @@
 
 
 class AspectTest : public testing::Test
-{};
+{
+};
