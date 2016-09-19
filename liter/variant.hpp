@@ -10,6 +10,19 @@
 namespace liter
 {
 
+template <typename T, typename U>
+struct convertiale
+{
+private:
+    static std::true_type Check(T);
+    static std::false_type Check(...);
+
+public:
+    enum {
+        value = std::is_same<decltype(Check(std::declval<U>())), std::true_type>::value
+    };
+};
+
 template <std::size_t arg, std::size_t... rest>
 struct IntegerMax;
 
