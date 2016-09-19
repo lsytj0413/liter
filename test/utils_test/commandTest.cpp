@@ -30,7 +30,7 @@ public:
         return a + i;
     };
 
-    int test(int i, int j){
+    int test2(int i, int j){
         return a + i + j;
     };
 };
@@ -130,7 +130,7 @@ TEST_F(CommandTest, testArgsMulti)
     objA.a = 0;
 
     auto f2 = liter::command<int>();
-    f2.wrap(static_cast<int(A::*)(int, int)>(&A::test), &objA, 10, 20);
+    f2.wrap((&A::test2), &objA, 10, 20);
 
     EXPECT_EQ(objA.a, 0);
     auto v3 = f2.execute();
