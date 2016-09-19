@@ -68,3 +68,76 @@ TEST_F(CommandTest, testArgsZero)
     auto v2 = f2.execute();
     EXPECT_EQ(v2, 1);
 }
+
+
+int test2(int i){
+    return i + g;
+};
+
+TEST_F(CommandTest, testArgsOne)
+{
+    g = 0;
+
+    auto f1 = liter::command<int>();
+    f1.wrap(test2, 10);
+
+    auto v1 = f1.execute();
+    EXPECT_EQ(v1, 10);
+
+    g = 10;
+    f1.wrap(test2, 10);
+    v1 = f1.execute();
+    EXPECT_EQ(v1, 20);
+
+    A objA;
+    objA.a = 0;
+
+    auto f2 = liter::command<int>();
+    f2.wrap(static_cast<int(A::*)(int)>(&A::test), &objA, 10);
+
+    EXPECT_EQ(objA.a, 0);
+    auto v3 = f2.execute();
+    EXPECT_EQ(v3, 10);
+
+    objA.a = 1;
+    EXPECT_EQ(objA.a, 1);
+    auto v2 = f2.execute();
+    EXPECT_EQ(v2, 11);
+}
+
+
+int test3(int i, int j){
+    return i + g + j;
+};
+
+
+TEST_F(CommandTest, testArgsMulti)
+{
+    g = 0;
+
+    auto f1 = liter::command<int>();
+    f1.wrap(test3, 10, 30);
+
+    auto v1 = f1.execute();
+    EXPECT_EQ(v1, 40);
+
+    g = 10;
+    f1.wrap(test3, 10, 30);
+    v1 = f1.execute();
+    EXPECT_EQ(v1, 50);
+
+    A objA;
+    objA.a = 0;
+
+    auto f2 = liter::command<int>();
+    f2.wrap(static_cast<int(A::*)(int, int)>(&A::test), &objA, 10, 20);
+
+    EXPECT_EQ(objA.a, 0);
+    auto v3 = f2.execute();
+    EXPECT_EQ(v3, 30);
+
+    objA.a = 1;
+    EXPECT_EQ(objA.a, 1);
+    auto v2 = f2.execute();
+    EXPECT_EQ(v2, 31);
+}
