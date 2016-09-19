@@ -10,8 +10,11 @@
 namespace liter
 {
 
+template <typename... TArgs>
+struct convertible;
+
 template <typename T, typename U>
-struct convertiale
+struct convertible<T, U>
 {
 private:
     static std::true_type Check(T);
@@ -20,6 +23,16 @@ private:
 public:
     enum {
         value = std::is_same<decltype(Check(std::declval<U>())), std::true_type>::value
+    };
+};
+
+
+template <typename T>
+struct convertible<T, T>
+{
+public:
+    enum {
+        value = true
     };
 };
 
