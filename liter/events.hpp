@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <liter/utils/uncopyable.h>
+#include <liter/uncopyable.h>
 
 
 namespace liter

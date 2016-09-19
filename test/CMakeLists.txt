@@ -31,6 +31,8 @@ SET (TEST_SRC
   utils_test/aspectTest.cpp
   utils_test/commandTest.cpp
   utils_test/commandTest.h
+  utils_test/eventsTest.h
+  utils_test/eventsTest.cpp
   )
 
 include_directories(../)
