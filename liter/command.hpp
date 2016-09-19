@@ -24,7 +24,7 @@ public:
     template <class R1, class C, class... DArgs,
               class P, class... TArgs>
     void wrap(R1(C::*f)(DArgs...) const, P&& p, TArgs&&... args){
-        m_fn = [&, f](){
+        m_fn = [=](){
             return (*p.*f)(args...);
         };
     };
@@ -32,7 +32,7 @@ public:
     template <class R1, class C, class... DArgs,
               class P, class... TArgs>
     void wrap(R1(C::*f)(DArgs...), P&& p, TArgs&&... args){
-        m_fn = [&, f](){
+        m_fn = [=](){
             return (*p.*f)(args...);
         };
     };
