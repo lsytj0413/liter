@@ -160,7 +160,7 @@ TEST_F(AspectTest, TestHasMemberInheVir)
 }
 
 
-int g = 0;
+static int g = 0;
 
 class A
 {
