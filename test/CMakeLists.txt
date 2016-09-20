@@ -37,6 +37,8 @@ SET (TEST_SRC
   utils_test/iocTest.cpp
   utils_test/messageBusTest.h
   utils_test/messageBusTest.cpp
+  utils_test/objectPoolTest.h
+  utils_test/objectPoolTest.cpp
   )
 
 include_directories(../)
@@ -44,6 +46,8 @@ include_directories(../)
 # locate gtest
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
+
+SET( CMAKE_BUILD_TYPE Debug )
 
 # boost
 set(BOOST_ROOT "~/workspace/3rd/boost_1_61_0")

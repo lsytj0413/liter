@@ -6,7 +6,7 @@
 #include <functional>
 #include <cassert>
 
-#include <liter/utils/uncopyable.h>
+#include <liter/uncopyable.h>
 
 
 namespace liter
