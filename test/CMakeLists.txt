@@ -33,6 +33,8 @@ SET (TEST_SRC
   utils_test/commandTest.h
   utils_test/eventsTest.h
   utils_test/eventsTest.cpp
+  utils_test/iocTest.h
+  utils_test/iocTest.cpp
   )
 
 include_directories(../)

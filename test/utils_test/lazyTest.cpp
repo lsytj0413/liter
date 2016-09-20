@@ -6,19 +6,15 @@
 
 
 int func0(){
-    std::cout << "func0" << std::endl;
     return 0;
 };
 
 int func1(int i){
-    std::cout << "func1" << std::endl;
     std::cout << i << std::endl;
     return i;
 };
 
 int func2(int i, int j){
-    std::cout << "func2" << std::endl;
-    std::cout << i + j << std::endl;
     return i + j;
 };
 

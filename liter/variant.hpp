@@ -129,7 +129,7 @@ public:
 
     ~variant()
     {
-        destroy();
+        destroy(m_type_index, &m_data);
     };
 
     variant(variant<Types...>&& old) : m_type_index(old.m_type_index)
@@ -160,7 +160,7 @@ public:
               class = typename std::enable_if<Contains<typename std::decay<T>::type, Types...>::value>::type>
     variant(T&& value) : m_type_index(typeid(void))
     {
-        destroy();
+        destroy(m_type_index, &m_data);
         using U = typename std::decay<T>::type;
         new(&m_data) U(std::forward<T>(value));
         m_type_index = std::type_index(typeid(U));
@@ -233,7 +233,7 @@ public:
 private:
     void destroy(const std::type_index& index, void *buf)
     {
-        [](Types&&...){}((destroy0<Types>(index, buf), 0)...);
+        [](){}((destroy0<Types>(index, buf), 0)...);
     };
 
     template <typename T>
@@ -247,7 +247,7 @@ private:
 
     void move(const std::type_index& old_t, void *old_v, void *new_v)
     {
-        [](Types&&...){}((move0<Types>(old_t, old_v, new_v), 0)...);
+        [](){}((move0<Types>(old_t, old_v, new_v), 0)...);
     };
 
     template <typename T>
@@ -261,7 +261,7 @@ private:
 
     void copy(const std::type_index& old_t, void *old_v, void *new_v)
     {
-        [](Types&&...){}((copy0<Types>(old_t, old_v, new_v), 0)...);
+        [](){}((copy0<Types>(old_t, old_v, new_v), 0)...);
     };
 
     template <typename T>

@@ -65,7 +65,7 @@ private:
         }
 
         m_creator_map.emplace(key, ctor);
-    }
+    };
 };
 
 }
