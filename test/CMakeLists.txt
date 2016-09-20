@@ -39,6 +39,8 @@ SET (TEST_SRC
   utils_test/messageBusTest.cpp
   utils_test/objectPoolTest.h
   utils_test/objectPoolTest.cpp
+  utils_test/optionalTest.h
+  utils_test/optionalTest.cpp
   )
 
 include_directories(../)

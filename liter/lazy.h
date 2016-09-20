@@ -3,7 +3,7 @@
 #include <functional>
 using std::function;
 
-#include "liter/optional.h"
+#include <liter/optional.hpp>
 
 
 namespace liter
