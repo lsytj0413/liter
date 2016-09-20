@@ -8,11 +8,11 @@
 
 static int g = 0;
 
-void test0(){
+static void test0(){
     g++;
 };
 
-int test1(){
+static int test1(){
     return 100;
 };
 
@@ -70,7 +70,7 @@ TEST_F(CommandTest, testArgsZero)
 }
 
 
-int test2(int i){
+static int test2(int i){
     return i + g;
 };
 
@@ -106,7 +106,7 @@ TEST_F(CommandTest, testArgsOne)
 }
 
 
-int test3(int i, int j){
+static int test3(int i, int j){
     return i + g + j;
 };
 
