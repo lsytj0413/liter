@@ -8,7 +8,9 @@
 namespace liter
 {
 
-template <typename T>
+template <typename T,
+          typename = typename std::enable_if<!std::is_same<void, T>::value>::type
+          >
 class optional
 {
 private:
