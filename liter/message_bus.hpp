@@ -25,17 +25,22 @@ public:
         add(topic, fn);
     };
 
-    template <typename R>
-    void send(const std::string& topic = ""){
-        using function_type = std::function<R()>;
+    // template <typename R, typename... TArgs>
+    // void attach(std::function<R(TArgs...)> f, const std::string& topic=""){
+    //     add(topic, f);
+    // };
 
-        std::string msg_type = topic + typeid(function_type).name();
-        auto range = m_map.equal_range(msg_type);
-        for (Iterator itor = range.first; itor != range.second; ++itor){
-            auto f = itor->second.cast<function_type>();
-            f();
-        }
-    };
+    // template <typename R>
+    // void send(const std::string& topic = ""){
+    //     using function_type = std::function<R()>;
+
+    //     std::string msg_type = topic + typeid(function_type).name();
+    //     auto range = m_map.equal_range(msg_type);
+    //     for (Iterator itor = range.first; itor != range.second; ++itor){
+    //         auto f = itor->second.cast<function_type>();
+    //         f();
+    //     }
+    // };
 
     template <typename R, typename... TArgs>
     void send(TArgs&&... args, const std::string& topic = ""){
