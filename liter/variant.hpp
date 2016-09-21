@@ -74,7 +74,7 @@ template <typename T, typename Head, typename... Rest>
 struct IndexOf<T, Head, Rest...>
 {
     enum {
-        value = IndexOf<T, Rest...>::value + 1
+        value = IndexOf<T, Rest...>::value == -1 ? -1 : IndexOf<T, Rest...>::value + 1
     };
 };
 
