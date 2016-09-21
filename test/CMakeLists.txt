@@ -41,6 +41,8 @@ SET (TEST_SRC
   utils_test/objectPoolTest.cpp
   utils_test/optionalTest.h
   utils_test/optionalTest.cpp
+  utils_test/visitorTest.h
+  utils_test/visitorTest.cpp
   )
 
 include_directories(../)
