@@ -170,8 +170,37 @@ TEST_F(VariantTest, testIndex)
 
 TEST_F(VariantTest, testVisit)
 {
-}
+    using T0 = liter::variant<int>;
+    auto v0 = T0(1);
 
+    int g = 0;
+    v0.visit([&](int i){
+            g = i;
+        });
+
+    EXPECT_EQ(g, 1);
+
+    using T1 = liter::variant<int, char>;
+    auto v1 = T1(10);
+
+    v1.visit([&](int i){
+            g = i;
+        });
+    EXPECT_EQ(g, 10);
+
+    g = 0;
+    v1 = T1('c');
+    char c = 'a';
+    v1.visit([&](int i){
+            g = i;
+        },
+        [&](char i){
+            c = i;
+        });
+
+    EXPECT_EQ(g, 0);
+    EXPECT_EQ(c, 'c');
+}
 
 TEST_F(VariantTest, testEqual)
 {
