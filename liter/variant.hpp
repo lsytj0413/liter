@@ -68,6 +68,34 @@ struct Contains<T> : public std::false_type
 {};
 
 template <typename T, typename... List>
+struct ConvContains;
+
+template <typename T, typename Head, typename... Rest>
+struct ConvContains<T, Head, Rest...> :
+            public std::conditional<convertible<Head, T>::value,
+                                    std::true_type,
+                                    ConvContains<T, Rest...>>::type
+{};
+
+template <typename T>
+struct ConvContains<T> : public std::false_type
+{};
+
+template <typename... T>
+struct ConvType;
+
+template <typename T, typename Head, typename... Rest>
+struct ConvType<T, Head, Rest...>
+{
+    using type = typename std::conditional<convertible<Head, T>::value,
+                                           Head,
+                                           ConvType<T, Rest...>>::type;
+};
+
+template <typename T>
+struct ConvType<T>{};
+
+template <typename T, typename... List>
 struct IndexOf;
 
 template <typename T, typename Head, typename... Rest>
@@ -94,10 +122,10 @@ struct IndexOf<T>
     };
 };
 
-template <int index, typename... Types>
+template <size_t index, typename... Types>
 struct At;
 
-template <int index, typename First, typename... Types>
+template <size_t index, typename First, typename... Types>
 struct At<index, First, Types...>
 {
     using type = typename At<index - 1, Types...>::type;
@@ -119,6 +147,94 @@ private:
     };
 
     using data_t = typename std::aligned_storage<data_size, align_size>::type;
+
+private:
+    data_t m_data;
+    std::type_index m_type_index;
+
+private:
+    template <typename... TArgs>
+    struct DataEqual{
+        static bool equal(const std::type_index& index, void* old_v, void* new_v)
+        {
+            return false;
+        };
+    };
+
+    template <typename T, typename... Rest>
+    struct DataEqual<T, Rest...>
+    {
+        static bool equal(const std::type_index& index, void* old_v, void* new_v)
+        {
+            if (index == std::type_index(typeid(T))){
+                bool b = (*reinterpret_cast<T*>(old_v)) == (*reinterpret_cast<T*>(new_v));
+                if (b){
+                    return true;
+                }
+            }
+
+            return DataEqual<Rest...>::equal(index, old_v, new_v);
+        }
+    };
+
+    void destroy(const std::type_index& index, void *buf)
+    {
+        [](...){}((destroy0<Types>(index, buf), 0)...);
+    };
+
+    template <typename T>
+    void destroy0(const std::type_index& id, void* data)
+    {
+        if (id == std::type_index(typeid(T)))
+        {
+            reinterpret_cast<T*>(data)->~T();
+        }
+    };
+
+    void move(const std::type_index& old_t, void *old_v, void *new_v)
+    {
+        [](...){}((move0<Types>(old_t, old_v, new_v), 0)...);
+    };
+
+    template <typename T>
+    void move0(const std::type_index& old_t, void* old_v, void* new_v)
+    {
+        if (old_t == std::type_index(typeid(T)))
+        {
+            new (new_v)T(std::move(*reinterpret_cast<T*>(old_v)));
+        }
+    };
+
+    void copy(const std::type_index& old_t, void *old_v, void *new_v)
+    {
+        [](...){}((copy0<Types>(old_t, old_v, new_v), 0)...);
+    };
+
+    template <typename T>
+    void copy0(const std::type_index& old_t, void* old_v, void* new_v)
+    {
+        if (old_t == std::type_index(typeid(T)))
+        {
+            new (new_v)T(*reinterpret_cast<T*>(old_v));
+        }
+    };
+
+    template <typename T> void cons(T&& value, std::true_type){
+        // 当有相同的类型时调用
+        destroy(m_type_index, &m_data);
+        using U = typename std::decay<T>::type;
+        new(&m_data) U(std::forward<T>(value));
+        m_type_index = std::type_index(typeid(U));
+    }
+
+    template <typename T>
+    void cons(T&& value, std::false_type){
+        // 当没相同的类型，但是可以隐式转换时调用
+        destroy(m_type_index, &m_data);
+        using U = typename ConvType<typename std::decay<T>::type, Types...>::type;
+        new(&m_data) U(std::forward<T>(value));
+        m_type_index = std::type_index(typeid(U));
+    }
 
 public:
     template <int index>
@@ -144,26 +260,23 @@ public:
 
     variant& operator= (const variant& old)
     {
-        copy(old.m_type_index, &old.m_data, &m_data);
+        copy(old.m_type_index, const_cast<data_t*>(&old.m_data), &m_data);
         m_type_index = old.m_type_index;
         return *this;
     };
 
     variant& operator= (const variant&& old)
     {
-        move(old.m_type_index, &old.m_data, &m_data);
+        move(old.m_type_index, const_cast<data_t*>(&old.m_data), &m_data);
         m_type_index = old.m_type_index;
         return *this;
     };
 
     template <class T,
-              class = typename std::enable_if<Contains<typename std::decay<T>::type, Types...>::value>::type>
+              class = typename std::enable_if<ConvContains<typename std::decay<T>::type, Types...>::value>::type>
     variant(T&& value) : m_type_index(typeid(void))
     {
-        destroy(m_type_index, &m_data);
-        using U = typename std::decay<T>::type;
-        new(&m_data) U(std::forward<T>(value));
-        m_type_index = std::type_index(typeid(U));
+        cons<T>(std::forward<T>(value), Contains<typename std::decay<T>::type, Types...>());
     };
 
     template <typename T>
@@ -223,59 +336,17 @@ public:
 
     bool operator== (const variant& rhs) const
     {
-        return m_type_index == rhs.m_type_index;
-    };
+        if (m_type_index == rhs.m_type_index){
+            if (m_type_index == std::type_index(typeid(void))){
+                return true;
+            }
 
-    bool operator< (const variant& rhs) const
-    {
-        return m_type_index < rhs.m_type_index;
-    };
-private:
-    void destroy(const std::type_index& index, void *buf)
-    {
-        [](){}((destroy0<Types>(index, buf), 0)...);
-    };
-
-    template <typename T>
-    void destroy0(const std::type_index& id, void* data)
-    {
-        if (id == std::type_index(typeid(T)))
-        {
-            reinterpret_cast<T*>(data)->~T();
+            return DataEqual<Types...>::equal(rhs.m_type_index, const_cast<data_t*>(&rhs.m_data), const_cast<data_t*>(&m_data));
         }
+
+        return false;
     };
 
-    void move(const std::type_index& old_t, void *old_v, void *new_v)
-    {
-        [](){}((move0<Types>(old_t, old_v, new_v), 0)...);
-    };
-
-    template <typename T>
-    void move0(const std::type_index& old_t, void* old_v, void* new_v)
-    {
-        if (old_t == std::type_index(typeid(T)))
-        {
-            new (new_v)T(std::move(*reinterpret_cast<T*>(old_v)));
-        }
-    };
-
-    void copy(const std::type_index& old_t, void *old_v, void *new_v)
-    {
-        [](){}((copy0<Types>(old_t, old_v, new_v), 0)...);
-    };
-
-    template <typename T>
-    void copy0(const std::type_index& old_t, void* old_v, void* new_v)
-    {
-        if (old_t == std::type_index(typeid(T)))
-        {
-            new (new_v)T(*reinterpret_cast<T*>(old_v));
-        }
-    };
-
-private:
-    data_t m_data;
-    std::type_index m_type_index;
 };
 
 }
