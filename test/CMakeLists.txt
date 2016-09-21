@@ -43,6 +43,8 @@ SET (TEST_SRC
   utils_test/optionalTest.cpp
   utils_test/visitorTest.h
   utils_test/visitorTest.cpp
+  utils_test/variantTest.h
+  utils_test/variantTest.cpp
   )
 
 include_directories(../)

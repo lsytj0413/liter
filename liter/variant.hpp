@@ -26,7 +26,6 @@ public:
     };
 };
 
-
 template <typename T>
 struct convertible<T, T>
 {
@@ -35,6 +34,7 @@ public:
         value = true
     };
 };
+
 
 template <std::size_t arg, std::size_t... rest>
 struct IntegerMax;
