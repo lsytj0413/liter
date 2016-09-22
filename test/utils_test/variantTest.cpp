@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 #include <string>
+#include <map>
+#include <vector>
 
 #include <liter/variant.hpp>
 
@@ -231,4 +233,6 @@ TEST_F(VariantTest, testEqual)
 TEST_F(VariantTest, testCons)
 {
     liter::variant<std::string> v{"123"};
+
+    std::map<liter::variant<int>, std::string> m;
 }

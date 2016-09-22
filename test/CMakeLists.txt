@@ -51,6 +51,8 @@ SET (TEST_SRC
   utils_test/timerTest.cpp
   utils_test/threadPoolTest.h
   utils_test/threadPoolTest.cpp
+  utils_test/taskTest.h
+  utils_test/taskTest.cpp
   )
 
 include_directories(../)

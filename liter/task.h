@@ -65,7 +65,7 @@ public:
 class task_group : public uncopyable
 {
 private:
-    using return_variant = variant<int, string, double, short, unsigned int>;
+    using return_variant = liter::variant<int, string, double, short, unsigned int>;
 
     std::multimap<return_variant, any> m_group;
     std::vector<std::shared_future<void>> m_void_group;
@@ -74,7 +74,8 @@ public:
     task_group(){};
     ~task_group(){};
 
-    template <typename R, typename = typename std::enable_if<!std::is_same<R, void>::value>::type>
+    template <typename R,
+              typename = typename std::enable_if<!std::is_same<R, void>::value>::type>
     void run(task<R()>&& task){
         m_group.emplace(R(), task.run());
     };
@@ -96,17 +97,18 @@ public:
 
     void wait(){
         for (auto itor = m_group.begin(); itor != m_group.end(); ++itor){
-            // itor->first.visit([&](int a){
-            //         future_get<int>(itor->second);
-            //     },[&](double b){
-            //         future_get<double>(itor->second);
-            //     },[&](std::string v){
-            //         future_get<std::string>(itor->second);
-            //     },[&](short v){
-            //         future_get<short>(itor->second);
-            //     },[&](unsigned int v){
-            //         future_get<unsigned int>(itor->second);
-            //     });
+            auto& v = const_cast<return_variant&>(itor->first);
+            v.visit([&](int a){
+                    future_get<int>(itor->second);
+                },[&](double b){
+                    future_get<double>(itor->second);
+                },[&](std::string v){
+                    future_get<std::string>(itor->second);
+                },[&](short v){
+                    future_get<short>(itor->second);
+                },[&](unsigned int v){
+                    future_get<unsigned int>(itor->second);
+                });
         }
 
         for (auto itor = m_void_group.begin(); itor != m_void_group.end(); ++itor){

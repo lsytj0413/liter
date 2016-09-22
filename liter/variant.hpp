@@ -248,14 +248,14 @@ public:
         destroy(m_type_index, &m_data);
     };
 
-    variant(variant<Types...>&& old) : m_type_index(old.m_type_index)
+    variant(const variant<Types...>&& old) : m_type_index(old.m_type_index)
     {
-        move(old.m_type_index, &old.m_data, &m_data);
+        move(old.m_type_index, const_cast<data_t*>(&old.m_data), &m_data);
     };
 
-    variant(variant<Types...>& old) : m_type_index(old.m_type_index)
+    variant(const variant<Types...>& old) : m_type_index(old.m_type_index)
     {
-        copy(old.m_type_index, &old.m_data, &m_data);
+        copy(old.m_type_index, const_cast<data_t*>(&old.m_data), &m_data);
     };
 
     variant& operator= (const variant& old)
@@ -347,6 +347,10 @@ public:
         return false;
     };
 
+    bool operator<(const variant& rhs) const
+    {
+        return m_type_index < rhs.m_type_index;
+    }
 };
 
 }
