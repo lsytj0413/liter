@@ -111,7 +111,7 @@ pair_type<N, T1, T2> pair(const T1& tp1, const T2& tp2){
                           );
 };
 
-template <int... Indexes, typename T1, typename T2>
+template <size_t... Indexes, typename T1, typename T2>
 decltype(auto) pairs_helper(sequence<Indexes...>, const T1& tp1, const T2& tp2){
     return std::make_tuple(pair<Indexes>(tp1, tp2)...);
 };
@@ -120,11 +120,13 @@ decltype(auto) pairs_helper(sequence<Indexes...>, const T1& tp1, const T2& tp2){
 
 template <typename T1, typename T2>
 decltype(auto) zip(T1&& tp1, T2&& tp2){
-    static_assert(std::tuple_size<T1>::value == std::tuple_size<T2>::value,
+    using U1 = typename std::remove_reference<T1>::type;
+    using U2 = typename std::remove_reference<T2>::type;
+    static_assert(std::tuple_size<U1>::value == std::tuple_size<U2>::value,
                   "tuples should be the same size."
                   );
 
-    return detail::pairs_helper(typename make_sequence<std::tuple_size<T1>::value>::type(),
+    return detail::pairs_helper(typename make_sequence<std::tuple_size<U1>::value>::type(),
                                 std::forward<T1>(tp1),
                                 std::forward<T2>(tp2)
                                 );

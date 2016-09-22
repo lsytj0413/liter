@@ -67,3 +67,29 @@ TEST_F(TupleHelperTest, testApply)
         }, v0);
     EXPECT_EQ(r, 5.4);
 }
+
+
+TEST_F(TupleHelperTest, testZip)
+{
+    auto v0 = std::tuple<int, char, double>(5, 'a', 2.7);
+    auto v1 = std::tuple<double, int, char>(2.7, 5, 'a');
+
+    auto v2 = liter::zip(v0, v1);
+
+    auto i2 = std::is_same<decltype(v2), std::tuple<std::pair<int, double>,
+                                                    std::pair<char, int>,
+                                                    std::pair<double, char>>>::value;
+    EXPECT_EQ(i2, true);
+
+    auto v20 = std::get<0>(v2);
+    EXPECT_EQ(v20.first, 5);
+    EXPECT_EQ(v20.second, 2.7);
+
+    auto v21 = std::get<1>(v2);
+    EXPECT_EQ(v21.first, 'a');
+    EXPECT_EQ(v21.second, 5);
+
+    auto v22 = std::get<2>(v2);
+    EXPECT_EQ(v22.first, 2.7);
+    EXPECT_EQ(v22.second, 'a');
+}
