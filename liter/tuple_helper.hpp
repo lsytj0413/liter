@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <utility>
 
 #include <liter/sequence.hpp>
 
@@ -54,57 +55,47 @@ namespace detail
 {
 
 template <typename Func, typename Last>
-void for_each_impl(Func&& fn, Last&& last){
+void apply_impl(Func&& fn, Last&& last){
     fn(std::forward<Last>(last));
 };
 
 template <typename Func, typename First, typename... Rest>
-void for_each_impl(Func&& fn, First&& first, Rest&&... rest){
+void apply_impl(Func&& fn, First&& first, Rest&&... rest){
     fn(std::forward<First>(first));
-    for_each_impl(std::forward<Func>(fn), std::forward<Rest>(rest)...);
+    apply_impl(std::forward<Func>(fn), std::forward<Rest>(rest)...);
 };
 
-template <typename Func, int... Indexes, typename... TArgs>
-void for_each_helper(Func&& fn, sequence<Indexes...>, std::tuple<TArgs...>&& tp){
-    for_each_impl(std::forward<Func>(fn), std::forward<TArgs>(std::get<Indexes>(tp))...);
+template <typename Func, size_t... Indexes, typename... TArgs>
+void apply_helper(Func&& fn, std::tuple<TArgs...>& tp, liter::sequence<Indexes...>){
+    apply_impl(std::forward<Func>(fn), std::forward<TArgs>(std::get<Indexes>(tp))...);
 };
 
 }
 
 template <typename Func, typename Tuple>
-void tp_for_each(Func&& fn, Tuple&& tp){
-    for_each_helper(std::forward<Func>(fn),
-                    typename make_sequence<std::tuple_size<Tuple>::value>::type(),
-                    std::forward<Tuple>(tp));
+void apply(Func&& fn, Tuple&& tp){
+    detail::apply_helper(std::forward<Func>(fn),
+                         std::forward<Tuple>(tp),
+                         typename make_sequence<std::tuple_size<typename std::remove_reference<Tuple>::type>::value>::type());
 };
 
 
-template <typename... TArgs, int... Indexes>
-decltype(auto) reverse_imp(std::tuple<TArgs...>&& tp, sequence<Indexes...>&&){
-    return std::make_tuple(std::get<Indexes>(std::forward<std::tuple<TArgs>>(tp))...);
+template <typename... TArgs, size_t... Indexes>
+decltype(auto) reverse_imp(const std::tuple<TArgs...>& tp, sequence<Indexes...>&&){
+    return std::make_tuple(std::get<Indexes>(tp)...);
 };
 
 template <typename... TArgs>
-decltype(auto) reverse(std::tuple<TArgs...>&& tp){
-    return reverse_imp(std::forward<std::tuple<TArgs...>>(tp),\
-                       typename make_sequence<0, std::tuple_size<decltype(tp)>::value, -1>::type()
+decltype(auto) reverse(const std::tuple<TArgs...>& tp){
+    return reverse_imp(tp,
+                       typename reverse_sequence<typename make_sequence<sizeof...(TArgs)>::type>::type()
                        );
 };
 
-template <typename F, typename... TArgs, int... Indexes>
-decltype(auto) apply(F&& fn, std::tuple<TArgs...>&& tp, sequence<Indexes...>&&){
-    return apply(std::forward<F>(fn),
-                 std::forward<TArgs>(std::get<Indexes>(tp))...
-                 );
-};
-
-template <typename F, typename... TArgs>
-decltype(auto) apply(F&& fn, std::tuple<TArgs...>&& tp){
-    return apply(std::forward<F>(fn),
-                 std::forward<std::tuple<TArgs...>>(tp),
-                 typename make_sequence<std::tuple_size<decltype(tp)>::value>::type()
-                 );
-};
+// template <typename F, typename... TArgs>
+// decltype(auto) apply(F&& fn, std::tuple<TArgs...>& tp){
+//     tp_for_each(std::forward<F>(fn), tp);
+// };
 
 namespace detail
 {
