@@ -41,6 +41,20 @@ public:
         m_queue.pop_front();
     };
 
+    bool take(T& x, int mis){
+        std::unique_lock<std::mutex> locker(m_mutex);
+        auto r = m_not_empty.wait_for(locker, std::chrono::milliseconds(mis), [this](){
+                return !m_queue.empty();
+            });
+        if (!r){
+            return false;
+        }
+
+        x = m_queue.front();
+        m_queue.pop_front();
+        return true;
+    };
+
     void take(std::list<T>& list){
         std::unique_lock<std::mutex> locker(m_mutex);
         m_not_empty.wait(locker, [this](){

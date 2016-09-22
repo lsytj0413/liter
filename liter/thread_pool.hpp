@@ -67,15 +67,16 @@ private:
             t->join();
         }
         m_threads.clear();
-    }
+    };
 
     void run_in_thread(){
         while(m_running){
             Task t;
-            m_tasks.take(t);
 
-            t();
-        };
+            if (m_tasks.take(t, 100)){
+                t();
+            }
+        }
     };
 };
 
