@@ -47,6 +47,8 @@ SET (TEST_SRC
   utils_test/variantTest.cpp
   utils_test/tupleHelperTest.h
   utils_test/tupleHelperTest.cpp
+  utils_test/timerTest.h
+  utils_test/timerTest.cpp
   )
 
 include_directories(../)
