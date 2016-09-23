@@ -93,6 +93,13 @@ TEST_F(TaskTest, testParallelForeach)
 }
 
 
+TEST_F(TaskTest, testParallelInvoke)
+{
+    liter::parallel_invoke(liter::task<void()>([](){}), liter::task<int()>([]()->int {
+            return 0;
+            }));
+}
+
 TEST_F(TaskTest, testParallelReduce)
 {
     std::vector<int> v = {
