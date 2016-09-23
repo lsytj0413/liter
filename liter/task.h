@@ -42,7 +42,7 @@ public:
 
     template <typename... TArgs0>
     R get(TArgs0&&... args){
-        return std::async(m_fn, std::forward<TArgs0>(args)...);
+        return std::async(m_fn, std::forward<TArgs0>(args)...).get();
     };
 
     std::shared_future<R> run(){
@@ -54,7 +54,7 @@ public:
         using result_type = typename std::result_of<F(R)>::type;
 
         auto func = std::move(m_fn);
-        return task<result_type(TArgs...)>([func, &f](TArgs&&... args){
+        return task<result_type(TArgs...)>([func, f](TArgs&&... args){
                 std::future<R> last_fn = std::async(func, std::forward<TArgs>(args)...);
                 return std::async(f, last_fn.get()).get();
             });
