@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 
 #include <liter/task.h>
+#include <vector>
+#include <functional>
 
 
 TEST_F(TaskTest, testGet)
@@ -19,6 +21,15 @@ TEST_F(TaskTest, testGet)
         });
 }
 
+
+TEST_F(TaskTest, testRun)
+{
+    liter::task<int()> t([]()->int{
+            return 0;
+        });
+
+    t.run();
+}
 
 TEST_F(TaskTest, testThen)
 {
@@ -37,4 +48,31 @@ TEST_F(TaskTest, testThen)
     t1.get(5);
 
     EXPECT_EQ(g, 10);
+}
+
+
+TEST_F(TaskTest, testGroupRunAndWait)
+{
+    liter::task_group g;
+    g.run(liter::task<int()>([]()->int{
+            return 1;
+            }));
+
+    g.run(liter::task<void()>([](){}));
+
+    g.wait();
+}
+
+
+TEST_F(TaskTest, testWhenAll)
+{
+    std::vector<liter::task<int()>> v = {
+        liter::task<int()>([]() -> int{return 0;}),
+        liter::task<int()>([]() -> int{return 1;}),
+    };
+
+    auto v0 = liter::when_all(v);
+    auto v00 = v0[0];
+    EXPECT_EQ(v00, 0);
+    EXPECT_EQ(1, v0[1]);
 }
