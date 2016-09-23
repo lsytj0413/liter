@@ -76,3 +76,61 @@ TEST_F(TaskTest, testWhenAll)
     EXPECT_EQ(v00, 0);
     EXPECT_EQ(1, v0[1]);
 }
+
+
+TEST_F(TaskTest, testParallelForeach)
+{
+    std::vector<int> v = {
+        1, 2, 3, 4, 5
+    };
+
+    int g = 0;
+    liter::parallel_foreach(std::begin(v), std::end(v), [&g](int i){
+            g += i;
+        });
+
+    EXPECT_EQ(g, 15);
+}
+
+
+TEST_F(TaskTest, testParallelReduce)
+{
+    std::vector<int> v = {
+        1, 2, 3, 4, 5
+    };
+
+    int g = 0;
+    auto v0 = liter::parallel_reduce(v, 0,
+                           [&g](std::vector<int>::iterator itor1, std::vector<int>::iterator itor2, int i) -> int{
+                               int sum = 0;
+                               // int v = 0;
+                               std::for_each(itor1, itor2, [&sum, &g](int j){
+                                       sum += j;
+                                       g += j;
+                                       // v = j;
+                                   });
+
+                               return sum;
+                           });
+
+    EXPECT_EQ(g, 30);
+    EXPECT_EQ(v0, 15);
+
+    g = 0;
+    auto v1 = liter::parallel_reduce(v, 0,
+                           [](std::vector<int>::iterator itor1, std::vector<int>::iterator itor2, int i) -> int{
+                               int sum = 0;
+                               std::for_each(itor1, itor2, [&sum](int j){
+                                       sum += j;
+                                   });
+
+                               return sum;
+                           }, [&g](std::vector<int>::iterator itor1, std::vector<int>::iterator itor2, int i){
+                               std::for_each(itor1, itor2, [&g](int j){
+                                       g += j;
+                                   });
+                               return g;
+                           });
+    EXPECT_EQ(g, 15);
+    EXPECT_EQ(v1, 15);
+}

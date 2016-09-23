@@ -232,13 +232,8 @@ void parallel_invoke(Fns&&... fns){
     g.wait();
 };
 
-template <typename Range, typename ReduceF>
-auto parallel_reduce(Range&& range, typename Range::value_type& init, ReduceF&& f){
-    return parallel_reduce<Range, ReduceF>(range, init, f, f);
-};
-
 template <typename Range, typename RangeF, typename ReduceF>
-auto parallel_reduce(Range&& range, typename Range::value_type& init, RangeF&& f0, ReduceF&& f1){
+auto parallel_reduce(Range&& range, typename std::remove_reference<Range>::type::value_type init, RangeF&& f0, ReduceF&& f1){
     auto partNum = std::thread::hardware_concurrency();
     auto begin = std::begin(range);
     auto end = std::end(range);
@@ -253,25 +248,33 @@ auto parallel_reduce(Range&& range, typename Range::value_type& init, RangeF&& f
         blockSize = 1;
     }
 
-    using value_type = typename Range::value_type;
+    using value_type = typename std::remove_reference<Range>::type::value_type;
     std::vector<std::future<value_type>> futures;
 
     for(; begin != last; std::advance(begin, blockSize)){
-        futures.emplace_back(std::async([begin, &init, blockSize, &f0](){
-                    f0(begin, begin + blockSize, init);
+        futures.emplace_back(std::async([begin, &init, blockSize, &f0]() -> value_type{
+                    return f0(begin, begin + blockSize, init);
                 }));
     }
 
-    futures.emplace_back(std::async([&begin, &end, &init, &f0](){
-                f0(begin, end, init);
+    futures.emplace_back(std::async([&begin, &end, &init, &f0]() -> value_type{
+                return f0(begin, end, init);
             }));
 
     std::vector<value_type> r;
-    std::for_each(futures.begin(), futures.end(), [&r](auto f){
+    std::for_each(futures.begin(), futures.end(), [&r](std::future<value_type>& f){
             r.emplace_back(f.get());
         });
 
     return f1(r.begin(), r.end(), init);
+};
+
+template <typename Range, typename ReduceF>
+auto parallel_reduce(Range&& range, typename std::remove_reference<Range>::type::value_type init, ReduceF&& f){
+    return parallel_reduce(std::forward<Range>(range),
+                           init,
+                           std::forward<ReduceF>(f),
+                           std::forward<ReduceF>(f));
 };
 
 }
