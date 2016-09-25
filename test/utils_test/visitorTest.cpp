@@ -44,8 +44,6 @@ public:
 };
 
 
-
-
 TEST_F(VisitorTest, testVisit)
 {
     CVAB v;
