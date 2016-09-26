@@ -53,6 +53,8 @@ SET (TEST_SRC
   utils_test/threadPoolTest.cpp
   utils_test/taskTest.h
   utils_test/taskTest.cpp
+  utils_test/linqTest.h
+  utils_test/linqTest.cpp
   )
 
 include_directories(../)

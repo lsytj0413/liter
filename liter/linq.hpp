@@ -45,7 +45,7 @@ public:
     using value_type = typename R::value_type;
 
 public:
-    linq(R& range) : m_linq_range(range)
+    linq(const R& range) : m_linq_range(range)
     {};
 
     template <typename F>
