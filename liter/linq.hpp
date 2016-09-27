@@ -83,7 +83,7 @@ public:
 
     template <typename F>
     decltype(auto) last(const F& f){
-        return reverse().first();
+        return reverse().first(f);
     };
 
     template <typename F>

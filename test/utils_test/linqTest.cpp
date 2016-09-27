@@ -108,3 +108,73 @@ TEST_F(LinqTest, testReverse)
 
     EXPECT_EQ("zhuhai", v1->address);
 }
+
+
+TEST_F(LinqTest, testFirst)
+{
+    std::vector<Person> v = {
+        {21, "a", "shanghai"},
+        {22, "bb", "wuhan"},
+        {21, "a", "zhuhai"}
+    };
+
+    auto f = liter::from(v).first([](const Person& p){
+            return p.age > 21;
+        });
+    EXPECT_EQ(22, f->age);
+}
+
+
+TEST_F(LinqTest, testLast)
+{
+    std::vector<Person> v = {
+        {21, "a", "shanghai"},
+        {22, "bb", "wuhan"},
+        {21, "a", "zhuhai"}
+    };
+
+    auto f = liter::from(v).last([](const Person& p){
+            return p.age == 21;
+        });
+    EXPECT_EQ("zhuhai", f->address);
+}
+
+
+TEST_F(LinqTest, testAny)
+{
+    std::vector<Person> v = {
+        {21, "a", "shanghai"},
+        {22, "bb", "wuhan"},
+        {21, "a", "zhuhai"}
+    };
+
+    auto f = liter::from(v).any([](const Person& p){
+            return p.age == 22;
+        });
+    EXPECT_EQ(true, f);
+
+    f = liter::from(v).any([](const Person& p){
+            return p.age == 23;
+        });
+    EXPECT_EQ(false, f);
+}
+
+
+TEST_F(LinqTest, testAll)
+{
+    std::vector<Person> v = {
+        {21, "a", "shanghai"},
+        {22, "bb", "wuhan"},
+        {21, "a", "zhuhai"}
+    };
+
+    auto f = liter::from(v).all([](const Person& p){
+            return p.age == 22;
+        });
+    EXPECT_EQ(false, f);
+
+    f = liter::from(v).all([](const Person& p){
+            return p.age == 22 || p.age == 21;
+        });
+    EXPECT_EQ(true, f);
+}
