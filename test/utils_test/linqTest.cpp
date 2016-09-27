@@ -236,13 +236,19 @@ TEST_F(LinqTest, testContains)
 TEST_F(LinqTest, testDistinct)
 {
     std::vector<int> v0 = {1, 2, 3, 3, 5, 5};
-    auto f = liter::from(v0).distinct().count();
+    auto f = liter::from(v0).where([](int i){return true;}).distinct().count();
     EXPECT_EQ(f, 4);
 
-    // f = liter::from(v0).distinct([](int i, int j){
+    // auto f1 = liter::from(v0).distinct([](auto i, auto j){
     //         return i == j;
     //     }).count();
-    // EXPECT_EQ(f, 4);
+
+    // EXPECT_EQ(f1, 4);
+
+    // unique(boost::iterator_range<std::vector<int>::iterator>(v0), [](int i, int j){
+    //         return i == j;
+    //     });
+
 
     // std::vector<Person> v1 = {
     //     {21, "a", "shanghai"},

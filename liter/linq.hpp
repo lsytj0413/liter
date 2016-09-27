@@ -107,7 +107,7 @@ public:
     };
 
     template <typename F>
-    auto distinct(const F& f) const {
+    auto distinct(const F& f) const{
         return linq(unique(m_linq_range, f));
     };
 
