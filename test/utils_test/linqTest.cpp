@@ -4,6 +4,7 @@
 
 #include <liter/linq.hpp>
 #include <vector>
+#include <map>
 #include <string>
 #include <iostream>
 
@@ -352,4 +353,240 @@ TEST_F(LinqTest, testMinmax)
 
     EXPECT_EQ(f1.first.age, 21);
     EXPECT_EQ(f1.second.age, 22);
+}
+
+
+TEST_F(LinqTest, testElemantAt)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 5, 5};
+
+    auto f = liter::from(v0).element_at(1);
+    EXPECT_EQ(*f, 2);
+
+    f = liter::from(v0).element_at(3);
+    EXPECT_EQ(*f, 3);
+
+    f = liter::from(v0).element_at(2);
+    EXPECT_EQ(*f, 3);
+
+    f = liter::from(v0).element_at(5);
+    EXPECT_EQ(*f, 5);
+}
+
+
+TEST_F(LinqTest, testKeys)
+{
+    std::map<int, int> v0 = {
+        {1, 2},
+        {3, 4}
+    };
+
+    auto f = liter::from(v0).keys();
+    auto v1 = f.element_at(0).base()->first;
+    // int status = 0;
+    // std::cout << abi::__cxa_demangle(typeid(v1).name(), 0, 0, &status) << std::endl;
+    EXPECT_EQ(v1, 1);
+}
+
+
+TEST_F(LinqTest, testValues)
+{
+    std::map<int, int> v0 = {
+        {1, 2},
+        {3, 4}
+    };
+
+    auto f = liter::from(v0).values();
+    auto v1 = f.element_at(0).base()->second;
+    // int status = 0;
+    // std::cout << abi::__cxa_demangle(typeid(v1).name(), 0, 0, &status) << std::endl;
+    EXPECT_EQ(v1, 2);
+}
+
+
+TEST_F(LinqTest, testTake)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 5, 5};
+
+    auto f1 = liter::from(v0).take(2);
+    auto v1 = f1.element_at(1).base();
+    EXPECT_EQ(*v1, 2);
+
+    auto f2 = liter::from(v0).take(2, 4);
+    auto c2 = f2.count();
+    EXPECT_EQ(c2, 2);
+    auto v2 = f2.element_at(1).base();
+    EXPECT_EQ(*v2, 3);
+}
+
+
+TEST_F(LinqTest, testToVector)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 5, 5};
+
+    auto f1 = liter::from(v0).take(2).to_vector();
+
+    EXPECT_EQ(2, f1.size());
+    EXPECT_EQ(1, f1.at(0));
+    EXPECT_EQ(2, f1.at(1));
+}
+
+
+TEST_F(LinqTest, testTakeWhile)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 4, 5, 2};
+
+    auto f1 = liter::from(v0).take_while([](int i){
+            return i > 3;
+        });
+
+    auto f2 = f1.element_at(3).base();
+    EXPECT_EQ(*f2, 3);
+    EXPECT_EQ(f1.count(), 4);
+
+    std::vector<int> v1 = {1, 2, 3, 3};
+    auto b = f1.equals(liter::from(v1));
+    EXPECT_EQ(b, true);
+}
+
+
+TEST_F(LinqTest, testSkip)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 4, 5, 2};
+
+    auto f1 = liter::from(v0).skip(3);
+
+    std::vector<int> v1 = {3, 4, 5, 2};
+    auto b = f1.equals(liter::from(v1));
+    EXPECT_EQ(b, true);
+}
+
+
+TEST_F(LinqTest, testSkipWhile)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 4, 5, 2};
+
+    auto f1 = liter::from(v0).skip_while([](int i){
+            return i < 3;
+        });
+
+    std::vector<int> v1 = {3, 3, 4, 5, 2};
+    auto b = f1.equals(liter::from(v1));
+    EXPECT_EQ(b, true);
+}
+
+
+TEST_F(LinqTest, testStep)
+{
+    std::vector<int> v0 = {1, 2, 3, 3, 4, 5, 2};
+
+    auto f1 = liter::from(v0).step(3);
+
+    // int status = 0;
+    // std::cout << abi::__cxa_demangle(typeid(f1).name(), 0, 0, &status) << std::endl;
+
+    EXPECT_EQ(f1.size(), 3);
+
+    auto j = 0;
+    auto it = f1.begin();
+    for(int i = 0; i < v0.size(); i = i + 3){
+        EXPECT_EQ(v0[i], *it);
+        ++it;
+    }
+}
+
+
+TEST_F(LinqTest, testIndirect)
+{
+    std::vector<int*> v0 = {
+        new int(1),
+        new int(2)
+    };
+
+    auto f1 = liter::from(v0).indirect();
+
+    std::vector<int> v1 = {1, 2};
+    auto b = f1.equals(liter::from(v1));
+    EXPECT_EQ(b, true);
+}
+
+
+TEST_F(LinqTest, testConcat)
+{
+    std::vector<int> v1 = {1, 2};
+    std::vector<int> v2 = {3, 4, 5};
+
+    auto f1 = liter::from(v1).concat(v2);
+
+    EXPECT_EQ(f1.count(), 5);
+
+    EXPECT_EQ(4, *(f1.element_at(3)));
+    // std::vector<int> v3 = {1, 2, 3, 4, 5};
+    // auto b = f1.equals(liter::from(v1));
+    // EXPECT_EQ(b, true);
+}
+
+
+TEST_F(LinqTest, testExcept)
+{
+    std::vector<int> v1 = {1, 2};
+    std::vector<int> v2 = {2, 3, 5};
+
+    std::vector<int> v3;
+    liter::from(v1).except(v2, v3);
+
+    EXPECT_EQ(v3.size(), 1);
+    EXPECT_EQ(v3[0], 1);
+}
+
+
+TEST_F(LinqTest, testIncludes)
+{
+    std::vector<int> v1 = {1, 2};
+    std::vector<int> v2 = {2, 3, 5};
+
+    auto f1 = liter::from(v1).includes(v2);
+    EXPECT_EQ(f1, false);
+
+    v1 = {2, 3, 5, 7, 100};
+    v2 = {3, 5};
+
+    f1 = liter::from(v1).includes(v2);
+    EXPECT_EQ(f1, true);
+}
+
+
+TEST_F(LinqTest, testGroupBy)
+{
+    std::vector<int> v1 = {2, 3, 5, 7, 100};
+
+    auto f1 = liter::from(v1).group_by([](int i){
+            if (i <= 5){
+                return 0;
+            }
+
+            return 1;
+        });
+    EXPECT_EQ(f1.size(), 5);
+    EXPECT_EQ(f1.count(0), 3);
+    EXPECT_EQ(f1.count(1), 2);
+
+    auto f2 = liter::from(v1).group_by([](int i){
+            if (i < 5){
+                return 0;
+            }
+
+            return 1;
+        }, [](int i){
+            return 2*i;
+        });
+
+    EXPECT_EQ(f2.count(0), 2);
+    EXPECT_EQ(f2.count(1), 3);
+
+    auto it = f2.lower_bound(0);
+    EXPECT_EQ(it->second, 4);
+
+    it = f2.lower_bound(1);
+    EXPECT_EQ(it->second, 10);
 }

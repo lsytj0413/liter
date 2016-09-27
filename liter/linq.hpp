@@ -197,25 +197,25 @@ public:
     };
 
     template <typename T>
-    decltype(auto) element_at(T index) const {
+    auto element_at(T index) const {
         return std::next(begin(), index);
     };
 
-    decltype(auto) keys() const {
+    auto keys() const {
         return linq<boost::select_first_range<R>>(boost::adaptors::keys(m_linq_range));
     };
 
-    decltype(auto) values() const {
+    auto values() const {
         return linq<boost::select_second_const_range<R>>(boost::adaptors::values(m_linq_range));
     };
 
     template <typename T>
-    decltype(auto) take(T n) const {
+    auto take(T n) const {
         return linq(slice(m_linq_range, 0, n));
     };
 
     template <typename T>
-    decltype(auto) take(T start, T end) const {
+    auto take(T start, T end) const {
         return linq(slice(m_linq_range, start, end));
     };
 
@@ -224,33 +224,33 @@ public:
     };
 
     template <typename F>
-    decltype(auto) take_while(const F& f) const {
+    auto take_while(const F& f) const {
         return linq(boost::make_iterator_range(begin(),
                                                std::find_if(begin(), end(), f)));
     };
 
     template <typename T>
-    decltype(auto) skip(T n) const {
+    auto skip(T n) const {
         return linq(boost::make_iterator_range(begin() + n, end()));
     };
 
     template <typename F>
-    decltype(auto) skip_while(const F& f) const {
+    auto skip_while(const F& f) const {
         return linq(boost::make_iterator_range(std::find_if_not(begin(), end(), f),
                                                end()));
     };
 
     template <typename T>
-    decltype(auto) step(T n) {
+    auto step(T n) {
         return stride(m_linq_range, n);
     };
 
-    decltype(auto) indirect() {
+    auto indirect() {
         return linq<boost::indirected_range<R>>(boost::adaptors::indirect(m_linq_range));
     };
 
     template <typename R2>
-    decltype(auto) concat(const R2& other) {
+    auto concat(const R2& other) {
         return linq<joined_range<R, const R2>>(boost::join(m_linq_range, other));
     };
 
@@ -277,7 +277,7 @@ public:
     };
 
     template <typename KeyFn, typename ValueFn>
-    decltype(auto) group_by(const KeyFn& fnk, const ValueFn& fnv) {
+    auto group_by(const KeyFn& fnk, const ValueFn& fnv) {
         using key_type = decltype(std::declval<KeyFn>()(std::declval<value_type>()));
         using val_type = decltype(std::declval<ValueFn>()(std::declval<value_type>()));
 
@@ -289,7 +289,7 @@ public:
     };
 
     template <typename T>
-    decltype(auto) cast() {
+    auto cast() {
         std::function<T(value_type)> f = [](value_type item){
             return static_cast<T>(item);
         };
