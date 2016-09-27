@@ -49,25 +49,27 @@ TEST_F(LinqTest, testWhere)
 }
 
 
-// TEST_F(LinqTest, testSelect)
-// {
-//     std::vector<Person> v = {
-//         {21, "a", "shanghai"},
-//         {22, "bb", "wuhan"},
-//         {21, "a", "zhuhai"}
-//     };
+TEST_F(LinqTest, testSelect)
+{
+    std::vector<Person> v = {
+        {21, "a", "shanghai"},
+        {22, "bb", "wuhan"},
+        {21, "a", "zhuhai"}
+    };
 
-//     auto p = liter::from(v).select([](const Person& p){
-//             return p.age > 21;
-//         });
-//     auto v1 = p.begin().base();
+    auto p = liter::from(v).select([](const Person& p){
+            return p.age > 21;
+        });
+    auto v1 = p.begin();
 
-//     int status = 0;
-//     std::cout << abi::__cxa_demangle(typeid(v1).name(), 0, 0, &status) << std::endl;
-//     // std::cout << typeid(p).name() << std::endl;
-//     // EXPECT_EQ(22, p.first(auto) first( const F &f ));
-//     // EXPECT_EQ("bb", p->name);
-// }
+    // int status = 0;
+    // std::cout << abi::__cxa_demangle(typeid(v1).name(), 0, 0, &status) << std::endl;
+
+    EXPECT_EQ(false, *v1);
+
+    v1++;
+    EXPECT_EQ(true, *v1);
+}
 
 
 TEST_F(LinqTest, testEmpty)
@@ -589,4 +591,43 @@ TEST_F(LinqTest, testGroupBy)
 
     it = f2.lower_bound(1);
     EXPECT_EQ(it->second, 10);
+}
+
+
+TEST_F(LinqTest, testCast)
+{
+    std::vector<int> v1 = {2, 3, 5, 7, 100};
+
+    auto f1 = liter::from(v1).cast<int>();
+    EXPECT_EQ(f1.count(), 5);
+}
+
+
+TEST_F(LinqTest, testZip)
+{
+    std::vector<int> v1 = {2, 3, 5, 7, 100};
+    std::vector<int> v2 = {4, 6, 10, 17};
+
+    auto f1 = liter::zip(v1, v2);
+    EXPECT_EQ(f1.size(), 5);
+
+    auto it = f1.begin();
+    EXPECT_EQ((*it).get<0>(), 2);
+    EXPECT_EQ((*it).get<1>(), 4);
+
+    ++it;
+    EXPECT_EQ((*it).get<0>(), 3);
+    EXPECT_EQ((*it).get<1>(), 6);
+
+    ++it;
+    EXPECT_EQ((*it).get<0>(), 5);
+    EXPECT_EQ((*it).get<1>(), 10);
+
+    ++it;
+    EXPECT_EQ((*it).get<0>(), 7);
+    EXPECT_EQ((*it).get<1>(), 17);
+
+    ++it;
+    EXPECT_EQ((*it).get<0>(), 100);
+    EXPECT_EQ((*it).get<1>(), 2);
 }
