@@ -107,63 +107,93 @@ public:
     };
 
     template <typename F>
-    decltype(auto) distinct(const F& f) const {
+    auto distinct(const F& f) const {
         return linq(unique(m_linq_range, f));
     };
 
-    decltype(auto) distince() {
+    auto distinct() {
         return linq<uniqued_range<R>>(m_linq_range | uniqued);
     };
 
     template <typename F>
-    decltype(auto) aggregate(const F& f) const {
+    auto aggregate(const F& f) const {
+        if (empty()){
+            throw std::logic_error("aggregate on empty object");
+        }
+
         auto it = begin();
-        auto value = *it++;              // error, while begin() == end()
+        auto value = *it++;
         return std::accumulate(it, end(), std::move(value), f);
     };
 
-    decltype(auto) sum() const {
+    auto sum() const {
         return aggregate(std::plus<value_type>());
     };
 
-    decltype(auto) count() const {
+    auto count() const {
         return std::distance(begin(), end());
     };
 
     template <typename F>
-    decltype(auto) count(const F& f) const {
+    auto count(const F& f) const {
         return std::count_if(begin(), end(), f);
     };
 
-    decltype(auto) average() {
+   auto average() {
         return sum() / count();
     };
 
     template <typename F>
-    decltype(auto) min(const F& f) const {
+    auto min(const F& f) const {
+        if (empty()){
+            throw std::logic_error("min on empty object");
+        }
+
         return *std::min_element(begin(), end(), f);
     };
 
-    decltype(auto) min() const {
+    auto min() const {
+        if (empty()){
+            throw std::logic_error("min on empty object");
+        }
+
         return *std::min_element(begin(), end());
     };
 
     template <typename F>
-    decltype(auto) max(const F& f) const {
+    auto max(const F& f) const {
+        if (empty()){
+            throw std::logic_error("max on empty object");
+        }
+
         return *std::max_element(begin(), end(), f);
     };
 
-    decltype(auto) max() const {
+    auto max() const {
+        if (empty()){
+            throw std::logic_error("max on empty object");
+        }
+
         return *std::max_element(begin(), end());
     };
 
     template <typename F>
-    decltype(auto) minmax(const F& f) const {
-        return *std::minmax_element(begin(), end(), f);
+    auto minmax(const F& f) const {
+        if (empty()){
+            throw std::logic_error("minmax on empty object");
+        }
+
+        auto v = std::minmax_element(begin(), end(), f);
+        return std::make_pair(*(v.first), *(v.second));
     };
 
-    decltype(auto) minmax() const {
-        return *std::minmax_element(begin(), end());
+    auto minmax() const {
+        if (empty()){
+            throw std::logic_error("minmax on empty object");
+        }
+
+        auto v = std::minmax_element(begin(), end());
+        return std::make_pair(*(v.first), *(v.second));
     };
 
     template <typename T>
