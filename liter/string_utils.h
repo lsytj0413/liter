@@ -1,3 +1,9 @@
+// @file string_utils.cpp
+// @brief 一些字符串处理相关函数
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <string>
@@ -11,20 +17,33 @@ using std::function;
 namespace liter
 {
 
+// @struct StringUtils
+// @brief 字符串工具类
 struct StringUtils
 {
-
+    // @function
+    // @brief 判断字符是否是数字
+    // @param val_ch: 字符
+    // @return bool
     static bool numeric_p(char val_ch)
     {
         return isdigit(val_ch);
     }
 
+    // @function
+    // @brief 判断字符是否是空白
+    // @param val_ch: 字符
+    // @return bool
     static bool whitespace_p(char val_ch)
     {
         return ' ' == val_ch ||
                 '\t' == val_ch;
     }
 
+    // @function
+    // @brief 判断字符串是否是空白
+    // @param val_str: 字符串
+    // @return bool
     static bool whitespace_p(const string& val_str)
     {
         for (auto&& val_ch : val_str)
@@ -38,15 +57,18 @@ struct StringUtils
         return true;
     }
 
+    // @function
+    // @brief 判断字符串是否是整形数字
+    // @param val_str: 字符串
+    // @return bool
     static bool int_p(const string& val_str)
     {
-        struct SStatFunc
-        {
-            std::function<bool(char, int&)> stat_func;
-        };
+        using StatFunc = std::function<bool(char)>;
 
-        std::array<SStatFunc, 3> stat_funcs;
-        stat_funcs[0] = {[](char val_ch, int& status) -> bool{
+        int status = 0;
+        std::array<StatFunc, 3> stat_funcs;
+        stat_funcs[0] = {[&](char val_ch) -> bool{
+                // 处理初始状态
                 if ('-' == val_ch)
                 {
                     status = 1;
@@ -62,7 +84,8 @@ struct StringUtils
 
                 return true;
             } };
-        stat_funcs[1] = {[](char val_ch, int& status) -> bool {
+        stat_funcs[1] = {[&](char val_ch) -> bool {
+                // 处理有负号的状态
                 if (!numeric_p(val_ch))
                 {
                     return false;
@@ -71,7 +94,8 @@ struct StringUtils
                 status = 2;
                 return true;
             } };
-        stat_funcs[2] = {[](char val_ch, int& status) -> bool {
+        stat_funcs[2] = {[&](char val_ch) -> bool {
+                // 处理数字序列状态
                 if (!numeric_p(val_ch))
                 {
                     return false;
@@ -79,10 +103,9 @@ struct StringUtils
                 return true;
             } };
 
-        int status = 0;
         for (auto&& val_ch : val_str)
         {
-            if (!stat_funcs[status].stat_func(val_ch, status))
+            if (!stat_funcs[status](val_ch))
             {
                 return false;
             }
@@ -91,15 +114,21 @@ struct StringUtils
         return 2 == status;
     }
 
+    // @function
+    // @brief 判断字符串是否是浮点型数字
+    // @param val_str: 字符串
+    // @return bool
     static bool float_p(const string& val_str)
     {
         struct SStatFunc
         {
             std::function<bool(char, int&)> stat_func;
         };
+        using StatFunc = std::function<bool(char)>;
 
-        std::array<SStatFunc, 5> stat_funcs;
-        stat_funcs[0] = { [](char val_ch, int& status) -> bool {
+        int status = 0;
+        std::array<StatFunc, 5> stat_funcs;
+        stat_funcs[0] = { [&](char val_ch) -> bool {
                 if ('-' == val_ch)
                 {
                     status = 1;
@@ -115,7 +144,7 @@ struct StringUtils
 
                 return true;
             } };
-        stat_funcs[1] = { [](char val_ch, int& status) -> bool {
+        stat_funcs[1] = { [&](char val_ch) -> bool {
                 if (!numeric_p(val_ch))
                 {
                     return false;
@@ -124,7 +153,7 @@ struct StringUtils
                 status = 2;
                 return true;
             } };
-        stat_funcs[2] = { [](char val_ch, int& status) -> bool {
+        stat_funcs[2] = { [&](char val_ch) -> bool {
                 if ('.' == val_ch)
                 {
                     status = 3;
@@ -136,7 +165,7 @@ struct StringUtils
 
                 return true;
             } };
-        stat_funcs[3] = { [](char val_ch, int& status) -> bool {
+        stat_funcs[3] = { [&](char val_ch) -> bool {
                 if (!numeric_p(val_ch))
                 {
                     return false;
@@ -145,14 +174,13 @@ struct StringUtils
                 status = 4;
                 return true;
             } };
-        stat_funcs[4] = { [](char val_ch, int& status) -> bool {
+        stat_funcs[4] = { [&](char val_ch) -> bool {
                 return numeric_p(val_ch);
             } };
 
-        int status = 0;
         for (auto&& val_ch : val_str)
         {
-            if (!stat_funcs[status].stat_func(val_ch, status))
+            if (!stat_funcs[status](val_ch))
             {
                 return false;
             }
