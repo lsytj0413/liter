@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <liter/string_utils.h>
 
+#include <string>
+using std::string;
 
 using namespace liter;
 
@@ -64,4 +66,74 @@ TEST_F(StringUtilTest, testFloatp)
     EXPECT_EQ(false, StringUtils::float_p(".0"));
     EXPECT_EQ(false, StringUtils::float_p("0."));
     EXPECT_EQ(false, StringUtils::float_p("0.0.0"));
+}
+
+
+TEST_F(StringUtilTest, testTrimLeft)
+{
+    string s1 = "  abd";
+    auto v1 = StringUtils::trim_left(s1);
+    EXPECT_EQ(v1, string("abd"));
+
+    string s2 = "a  bd";
+    auto v2 = StringUtils::trim_left(s2);
+    EXPECT_EQ(v2, string("a  bd"));
+
+    string s3 = "  a  bd";
+    auto v3 = StringUtils::trim_left(s3);
+    EXPECT_EQ(v3, string("a  bd"));
+
+    string s4 = "\tabd";
+    auto v4 = StringUtils::trim_left(s4);
+    EXPECT_EQ(v4, string("abd"));
+
+    string s5 = "\t abd \t";
+    auto v5 = StringUtils::trim_left(s5);
+    EXPECT_EQ(v5, string("abd \t"));
+}
+
+TEST_F(StringUtilTest, testTrimRight)
+{
+    string s1 = "abd  ";
+    auto v1 = StringUtils::trim_right(s1);
+    EXPECT_EQ(v1, string("abd"));
+
+    string s2 = "a  bd";
+    auto v2 = StringUtils::trim_right(s2);
+    EXPECT_EQ(v2, string("a  bd"));
+
+    string s3 = "a  bd  ";
+    auto v3 = StringUtils::trim_right(s3);
+    EXPECT_EQ(v3, string("a  bd"));
+
+    string s4 = "abd\t";
+    auto v4 = StringUtils::trim_right(s4);
+    EXPECT_EQ(v4, string("abd"));
+
+    string s5 = "\t abd \t";
+    auto v5 = StringUtils::trim_right(s5);
+    EXPECT_EQ(v5, string("\t abd"));
+}
+
+TEST_F(StringUtilTest, testTrim)
+{
+    string s1 = "\tabd  ";
+    auto v1 = StringUtils::trim(s1);
+    EXPECT_EQ(v1, string("abd"));
+
+    string s2 = "a  bd";
+    auto v2 = StringUtils::trim(s2);
+    EXPECT_EQ(v2, string("a  bd"));
+
+    string s3 = "  a  bd  ";
+    auto v3 = StringUtils::trim(s3);
+    EXPECT_EQ(v3, string("a  bd"));
+
+    string s4 = "  abd\t";
+    auto v4 = StringUtils::trim(s4);
+    EXPECT_EQ(v4, string("abd"));
+
+    string s5 = "\t abd \t";
+    auto v5 = StringUtils::trim(s5);
+    EXPECT_EQ(v5, string("abd"));
 }

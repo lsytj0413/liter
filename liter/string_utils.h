@@ -190,6 +190,10 @@ struct StringUtils
                 4 == status;
     }
 
+    // @function
+    // @brief 去除字符串左侧的空白
+    // @param val_str: 字符串
+    // @return string
     static string trim_left(const string& val_str)
     {
         using FuncType = bool (*)(char);
@@ -199,6 +203,10 @@ struct StringUtils
         return string(itor, val_str.end());
     }
 
+    // @function
+    // @brief 去除字符串右侧的空白
+    // @param val_str: 字符串
+    // @return string
     static string trim_right(const string& val_str)
     {
         using FuncType = bool (*)(char);
@@ -208,6 +216,10 @@ struct StringUtils
         return string(val_str.begin(), itor.base());
     }
 
+    // @function
+    // @brief 去除字符串两侧的空白
+    // @param val_str: 字符串
+    // @return string
     static string trim(const string& val_str)
     {
         return trim_left(trim_right(val_str));
