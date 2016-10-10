@@ -1,3 +1,9 @@
+// @file any.hpp
+// @brief 可存放任意类型的any
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <memory>
@@ -8,6 +14,8 @@ using std::unique_ptr;
 namespace liter
 {
 
+// @class any
+// @brief 任意类型的容器
 class any
 {
 public:
@@ -19,6 +27,9 @@ public:
                     m_type_index(rhs.m_type_index)
     {};
 
+    // @function
+    // @brief 普通构造函数, 通过值构造
+    // @param v: 值
     template <typename U, class = typename std::enable_if<!std::is_same<typename std::decay<U>::type,
                                                                         any>::value,
                                                           U>::type>
@@ -26,29 +37,43 @@ public:
                 m_type_index(std::type_index(typeid(typename std::decay<U>::type)))
     {};
 
+    // @function
+    // @brief 是否初始化
+    // @return bool
     bool null_p() const
     {
         return !bool(m_ptr);
     };
 
+    // @function
+    // @brief 是否是某个类型的值
+    // @return bool
     template <class U>
     bool is() const
     {
-        return m_type_index == std::type_index(typeid(U));
+        return m_type_index == std::type_index(typeid(typename std::decay<U>::type));
     };
 
+    // @function
+    // @brief 获取值
+    // @return U类型的对象
     template <class U>
-    U& cast()
+    typename std::decay<U>::type& cast()
     {
-        if(!is<U>())
+        using U1 = typename std::decay<U>::type;
+        if(!is<U1>())
         {
             throw std::logic_error{"bad case"};
         }
 
-        auto derived = dynamic_cast<Derived<U>*>(m_ptr.get());
+        auto derived = dynamic_cast<Derived<U1>*>(m_ptr.get());
         return derived->m_value;
     };
 
+    // @function
+    // @brief 赋值
+    // @param rhs: any对象
+    // @return any
     any& operator=(const any& rhs)
     {
         if (m_ptr == rhs.m_ptr)
@@ -65,12 +90,16 @@ private:
     struct Base;
     using BasePtr = unique_ptr<Base>;
 
+    // @struct Base
+    // @brief 基类, 用于类型擦除
     struct Base
     {
         virtual ~Base(){};
         virtual BasePtr clone() const = 0;
     };
 
+    // @struct Derived
+    // @brief 派生类, 保存具体的类型信息
     template <typename T>
     struct Derived : public Base
     {
