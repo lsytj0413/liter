@@ -136,4 +136,12 @@ TEST_F(StringUtilTest, testTrim)
     string s5 = "\t abd \t";
     auto v5 = StringUtils::trim(s5);
     EXPECT_EQ(v5, string("abd"));
+
+    string s6 = "";
+    auto v6 = StringUtils::trim(s6);
+    EXPECT_EQ(true, v6.empty());
+
+    string s7 = "  ";
+    auto v7 = StringUtils::trim(s7);
+    EXPECT_EQ(true, v7.empty());
 }
