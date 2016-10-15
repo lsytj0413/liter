@@ -1,3 +1,9 @@
+// @file variant.hpp
+// @brief 可变值容器
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <typeindex>
@@ -10,6 +16,8 @@
 namespace liter
 {
 
+// @struct convertible
+// @brief 类型隐式转换判定类
 template <typename... TArgs>
 struct convertible;
 
@@ -35,7 +43,8 @@ public:
     };
 };
 
-
+// @struct IntegerMax
+// @brief 获取最大整型值
 template <std::size_t arg, std::size_t... rest>
 struct IntegerMax;
 
@@ -49,10 +58,14 @@ struct IntegerMax<arg1, arg2, rest...> :
                                           arg1>=arg2 ? IntegerMax<arg1, rest...>::value : IntegerMax<arg2, rest...>::value>
 {};
 
+// @struct MaxAlign
+// @brief 获取类型中的最大内存对齐值
 template <typename... TArgs>
 struct MaxAlign : public std::integral_constant<int, IntegerMax<std::alignment_of<TArgs>::value...>::value>
 {};
 
+// @struct Contains
+// @brief 类型是否在类型列表中
 template <typename T, typename... List>
 struct Contains;
 
@@ -67,6 +80,8 @@ template <typename T>
 struct Contains<T> : public std::false_type
 {};
 
+// @struct ConvContains
+// @brief 类型是否可隐式转换为类型列表中的类型
 template <typename T, typename... List>
 struct ConvContains;
 
@@ -81,6 +96,8 @@ template <typename T>
 struct ConvContains<T> : public std::false_type
 {};
 
+// @struct ConvType
+// @brief 可隐式转换为的类型
 template <typename... T>
 struct ConvType;
 
@@ -95,6 +112,8 @@ struct ConvType<T, Head, Rest...>
 template <typename T>
 struct ConvType<T>{};
 
+// @struct IndexOf
+// @brief 类型在类型列表中的索引
 template <typename T, typename... List>
 struct IndexOf;
 
@@ -122,6 +141,8 @@ struct IndexOf<T>
     };
 };
 
+// @struct At
+// @brief 在类型列表中对应索引的类型
 template <size_t index, typename... Types>
 struct At;
 
@@ -137,13 +158,15 @@ struct At<0, T, Types...>
     using type = T;
 };
 
+// @class variant
+// @brief 可变类型容器
 template <typename... Types>
 class variant
 {
 private:
     enum {
-        data_size = IntegerMax<sizeof(Types)...>::value,
-        align_size = MaxAlign<Types...>::value
+        data_size = IntegerMax<sizeof(Types)...>::value,        // 最大类型尺寸
+        align_size = MaxAlign<Types...>::value                  // 最大类型内存对齐值
     };
 
     using data_t = typename std::aligned_storage<data_size, align_size>::type;
@@ -153,6 +176,9 @@ private:
     std::type_index m_type_index;
 
 private:
+
+    // @struct DataEqual
+    // @brief 值是否相等
     template <typename... TArgs>
     struct DataEqual{
         static bool equal(const std::type_index& index, void* old_v, void* new_v)
@@ -177,6 +203,11 @@ private:
         }
     };
 
+    // @function
+    // @brief 销毁值
+    // @param index: std::type_index
+    // @param buf: 待销毁值
+    // @return
     void destroy(const std::type_index& index, void *buf)
     {
         [](...){}((destroy0<Types>(index, buf), 0)...);
@@ -185,8 +216,7 @@ private:
     template <typename T>
     void destroy0(const std::type_index& id, void* data)
     {
-        if (id == std::type_index(typeid(T)))
-        {
+        if (id == std::type_index(typeid(T))) {
             reinterpret_cast<T*>(data)->~T();
         }
     };
@@ -199,8 +229,7 @@ private:
     template <typename T>
     void move0(const std::type_index& old_t, void* old_v, void* new_v)
     {
-        if (old_t == std::type_index(typeid(T)))
-        {
+        if (old_t == std::type_index(typeid(T))) {
             new (new_v)T(std::move(*reinterpret_cast<T*>(old_v)));
         }
     };
@@ -279,22 +308,31 @@ public:
         cons<T>(std::forward<T>(value), Contains<typename std::decay<T>::type, Types...>());
     };
 
+    // @function
+    // @brief 是否存储某个类型的值
+    // @return bool
     template <typename T>
-    bool is() const
-    {
+    bool is() const {
         return m_type_index == std::type_index(typeid(T));
     };
 
-    bool empty() const
-    {
+    // @function
+    // @brief 是否未存储值
+    // @return bool
+    bool empty() const {
         return m_type_index == std::type_index(typeid(void));
     };
 
-    std::type_index type() const
-    {
+    // @function
+    // @brief 获取当前存储类型的type_index
+    // @return std::type_index
+    std::type_index type() const {
         return m_type_index;
     };
 
+    // @function
+    // @brief 获取值
+    // @return T
     template <typename T>
     typename std::decay<T>::type& get()
     {
@@ -307,12 +345,18 @@ public:
         return *(U*)(&m_data);
     };
 
+    // @function
+    // @brief 获取类型索引
+    // @return int
     template <typename T>
-    int index()
-    {
+    int index() {
         return IndexOf<T, Types...>::value;
     };
 
+    // @function
+    // @brief 访问存储的值
+    // @param f: 访问函数
+    // @return
     template <typename F>
     void visit(F&& f){
         using T = typename liter::function_traits<F>::template args<0>::type;
@@ -322,6 +366,11 @@ public:
         }
     };
 
+    // @function
+    // @brief 访问存储的值
+    // @param f: 访问函数
+    // @param rest: 访问函数列表
+    // @return
     template <typename F, typename... Rest>
     void visit(F&& f, Rest&&... rest){
         using T = typename liter::function_traits<F>::template args<0>::type;
