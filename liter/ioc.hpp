@@ -1,3 +1,9 @@
+// @file ioc.hpp
+// @brief 控制反转实现模板
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <functional>
@@ -12,6 +18,8 @@
 namespace liter
 {
 
+// @class Ioc
+// @brief 控制反转实现类
 class Ioc : public uncopyable
 {
 private:
@@ -21,6 +29,10 @@ public:
     Ioc(void){};
     ~Ioc(void){};
 
+    // @function
+    // @brief 注册类型的创建函数
+    // @param key: 类型标志字符串
+    // @return
     template <typename T, typename Depend, typename... TArgs>
     typename std::enable_if<!std::is_base_of<T, Depend>::value>::type
     register_type(const std::string& key){
@@ -31,6 +43,10 @@ public:
         register_type(key, std::move(fn));
     };
 
+    // @function
+    // @brief 注册类型的创建函数
+    // @param key: 类型名称
+    // @return
     template <typename T, typename Depend, typename... TArgs>
     typename std::enable_if<std::is_base_of<T, Depend>::value>::type
     register_type(const std::string& key){
@@ -41,6 +57,11 @@ public:
         register_type(key, std::move(fn));
     };
 
+    // @function
+    // @brief 创建类型的变量
+    // @param key: 类型标志字符串
+    // @param args: 可变参数列表
+    // @return T*
     template <typename T, typename... TArgs>
     T* resolve(const std::string& key, TArgs... args){
         auto itor = m_creator_map.find(key);
@@ -52,6 +73,11 @@ public:
         return fn(args...);
     };
 
+    // @function
+    // @brief 创建类型的变量
+    // @param key: 类型标志字符串
+    // @param args: 可变参数列表
+    // @return shared_ptr<T>
     template <typename T, typename... TArgs>
     std::shared_ptr<T> resolve_shared(const std::string& key, TArgs... args){
         T* ptr = resolve<T>(key, args...);
