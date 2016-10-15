@@ -1,3 +1,9 @@
+// @file message_bus.hpp
+// @brief 消息总线
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <map>
@@ -12,6 +18,8 @@
 namespace liter
 {
 
+// @class MessageBus
+// @brief 消息总线类
 class MessageBus : uncopyable
 {
 private:
@@ -19,29 +27,22 @@ private:
     using Iterator = typename std::multimap<std::string, any>::iterator;
 
 public:
+    // @function
+    // @brief 监听消息
+    // @param f: 消息处理函数
+    // @param topic: 消息主题
+    // @return
     template <typename F>
     void attach(F&& f, const std::string& topic = ""){
         auto fn = to_function(std::forward<F>(f));
         add(topic, fn);
     };
 
-    // template <typename R, typename... TArgs>
-    // void attach(std::function<R(TArgs...)> f, const std::string& topic=""){
-    //     add(topic, f);
-    // };
-
-    // template <typename R>
-    // void send(const std::string& topic = ""){
-    //     using function_type = std::function<R()>;
-
-    //     std::string msg_type = topic + typeid(function_type).name();
-    //     auto range = m_map.equal_range(msg_type);
-    //     for (Iterator itor = range.first; itor != range.second; ++itor){
-    //         auto f = itor->second.cast<function_type>();
-    //         f();
-    //     }
-    // };
-
+    // @function
+    // @brief 发送消息
+    // @param args: 可变参数列表
+    // @param topic: 消息主题
+    // @return
     template <typename R, typename... TArgs>
     void send(TArgs&&... args, const std::string& topic = ""){
         using function_type = std::function<R(TArgs...)>;
@@ -54,6 +55,10 @@ public:
         }
     };
 
+    // @function
+    // @brief 移除监听
+    // @param topic: 消息主题
+    // @return
     template <typename R, typename... TArgs>
     void remove(const std::string& topic = ""){
         using function_type = std::function<R(TArgs...)>;
