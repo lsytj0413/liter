@@ -1,3 +1,9 @@
+// @file linq.hpp
+// @brief
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <numeric>
