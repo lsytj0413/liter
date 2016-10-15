@@ -1,3 +1,9 @@
+// @file object_pool.hpp
+// @brief 对象池
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <string>
@@ -12,6 +18,8 @@
 namespace liter
 {
 
+// @class ObjectPool
+// @brief 对象池
 template <typename T, int MaxSize>
 class ObjectPool : uncopyable
 {
@@ -22,6 +30,11 @@ private:
     using Constructor = std::function<std::shared_ptr<T>(TArgs...)>;
 
 public:
+    // @function
+    // @brief 初始化对象池
+    // @param num: 个数
+    // @param args: 可变参数列表
+    // @return
     template <typename... TArgs>
     void init(size_t num, TArgs&&... args){
         assert(num > 0 && num <= MaxSize);
@@ -36,6 +49,9 @@ public:
         }
     };
 
+    // @function
+    // @brief 获取一个对象
+    // @return shared_ptr<T>
     template <typename... TArgs>
     std::shared_ptr<T> get(){
         auto consName = typeid(Constructor<TArgs...>).name();
