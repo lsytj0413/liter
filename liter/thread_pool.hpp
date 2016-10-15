@@ -1,3 +1,9 @@
+// @file thread_pool.h
+// @brief 线程池
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <list>
@@ -14,6 +20,8 @@
 namespace liter
 {
 
+// @class ThreadPool
+// @brief 线程池类
 class ThreadPool : uncopyable
 {
 public:
@@ -27,8 +35,7 @@ private:
     std::once_flag m_once;
 
 public:
-    ThreadPool(size_t numThreads = std::thread::hardware_concurrency())
-    {
+    ThreadPool(size_t numThreads = std::thread::hardware_concurrency()) {
         assert(numThreads > 0);
         start(numThreads);
     };
@@ -37,16 +44,27 @@ public:
         stop_imp();
     }
 
+    // @function
+    // @brief 停止所有线程
+    // @return
     void stop(){
         std::call_once(m_once, [this](){
                 stop_imp();
             });
     };
 
+    // @function
+    // @brief 添加任务到执行队列
+    // @param task: 待执行任务
+    // @return
     void add(Task&& task){
         m_tasks.put(std::forward<Task>(task));
     };
 
+    // @function
+    // @brief 添加任务到执行队列
+    // @param task: 待执行任务
+    // @return
     void add(const Task& task){
         m_tasks.put(task);
     };
