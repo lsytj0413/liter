@@ -1,3 +1,9 @@
+// @file match.hpp
+// @brief 字符串查找算法, 详细描述可查看 http://blog.csdn.net/v_july_v/article/details/7041827
+// @author
+// @version
+// @date
+
 #pragma once
 
 #include <string>
@@ -12,8 +18,15 @@ namespace liter
 namespace algo
 {
 
+// @class matcher
+// @brief 基类
 class matcher {
 public:
+    // @function
+    // @brief 子串查找
+    // @param s: 源字符串
+    // @param pattern: 模式串, 待查找的子串
+    // @return int, 未找到则返回-1
     int match(const string& s, const string& pattern) {
         if (pattern.empty()) {
             return 0;
@@ -30,7 +43,8 @@ protected:
     virtual int match_imp(const string& s, const string& pattern) = 0;
 };
 
-
+// @class KPM_matcher
+// @brief KPM算法查找, 未优化的next计算
 class KPM_matcher : public matcher {
 public:
     vector<int> test_gen_next(const string& pattern) {
@@ -100,6 +114,8 @@ private:
 };
 
 
+// @class KPM_matcher
+// @brief KPM算法查找, 优化的next计算
 class KPM2_matcher final: public KPM_matcher{
 protected:
     virtual int calc_next_value(int j, int k, const string& pattern) override final {
