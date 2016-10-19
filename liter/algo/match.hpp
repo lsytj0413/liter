@@ -12,15 +12,8 @@ namespace liter
 namespace algo
 {
 
-class matcher
-{
-private:
-    vector<int> m_next;
-
+class matcher {
 public:
-    matcher(){};
-    ~matcher(){};
-
     int match(const string& s, const string& pattern) {
         if (pattern.empty()) {
             return 0;
@@ -30,12 +23,36 @@ public:
             return -1;
         }
 
+        return match_imp(s, pattern);
+    }
+
+protected:
+    virtual int match_imp(const string& s, const string& pattern) = 0;
+};
+
+
+class KPM_matcher : public matcher {
+public:
+    vector<int> test_gen_next(const string& pattern) {
+        if (!pattern.empty()) {
+            gen_next(pattern);
+        }
+
+        return m_next;
+    }
+
+protected:
+    vector<int> m_next;
+
+protected:
+    virtual int match_imp(const string& s, const string& pattern) override final {
         gen_next(pattern);
 
         int i = 0;
         int j = 0;
-        while(i < s.size() && j < pattern.size()) {
-            if (0 == j || s[i] == pattern[j]) {
+
+        while(i < s.size() && j < int(pattern.size())) {
+            if (j == -1 || s[i] == pattern[j]) {
                 ++i;
                 ++j;
             }
@@ -44,60 +61,61 @@ public:
             }
         }
 
-        if (j >= pattern.size()) {
-            return i - pattern.size();
+        if (j == pattern.size()) {
+            return i - j;
         }
-
-        return -1;
+        else {
+            return -1;
+        }
     };
 
-    vector<int> test_gen_next(const string& pattern) {
-        if (!pattern.empty()) {
-            gen_next(pattern);
-        }
-
-        return m_next;
-    };
-
-private:
     void gen_next(const string& pattern) {
         auto size = pattern.size();
+        fill_next(size);
 
-        m_next.resize(size);
-        std::fill_n(std::begin(m_next), 0, size);
-
-        m_next[0] = -1;
         int j = 0;
-        for (int i = 1; i < size; ++i)
-        {
-            j = m_next[i-1];
-            while(j >= 0 && pattern[j + 1] != pattern[i]) {
-                j = m_next[j];
-            }
+        int k = -1;
+        while(j < size) {
+            if (k == -1 || pattern[j] == pattern[k]) {
+                ++j;
+                ++k;
 
-            if (pattern[j+1] == pattern[i]) {
-                m_next[i] = j + 1;
+                m_next[j] = calc_next_value(j, k, pattern);
             }
             else {
-                m_next[i] = -1;
+                k = m_next[k];
             }
         }
+    }
 
-        // int i = 1;
-        // int j = 0;
-        // while(i < size) {
-        //     if (0 == j || pattern[i] == pattern[j]) {
-        //         m_next[i] = j;
-        //         ++j;
-        //         ++i;
-        //     }
-        //     else {
-        //         j = m_next[j];
-        //     }
-        // }
+    virtual int calc_next_value(int j, int k, const string& pattern) {
+        return k;
+    }
+private:
+    void fill_next(size_t size) {
+        m_next.resize(size);
+        std::fill_n(std::begin(m_next), 0, size);
+        m_next[0] = -1;
     }
 };
 
+
+class KPM2_matcher final: public KPM_matcher{
+protected:
+    virtual int calc_next_value(int j, int k, const string& pattern) override final {
+        if (pattern[j] != pattern[k]) {
+            return k;
+        }
+
+        return m_next[k];
+    };
+};
+
+using KPM1 = KPM_matcher;
+using KPM2 = KPM2_matcher;
+using KPM = KPM2;
+
 }
+
 }
 
