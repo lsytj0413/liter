@@ -31,6 +31,7 @@ SET (TEST_SRC
   utilsTest/threadPoolTest.cpp
   utilsTest/taskTest.cpp
   utilsTest/linqTest.cpp
+  utilsTest/curryTest.cpp
   algoTest/matchTest.cpp
   )
 
