@@ -1,5 +1,5 @@
 // @file optional.hpp
-// @brief 可选
+// @brief 可选值模板
 // @author
 // @version
 // @date
@@ -16,6 +16,7 @@ namespace liter
 
 // @class optional
 // @brief 可选类
+// @c++17 可使用std::optional
 template <typename T,
           typename = typename std::enable_if<!std::is_same<void, T>::value>::type
           >

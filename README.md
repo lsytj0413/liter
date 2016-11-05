@@ -42,4 +42,11 @@ liter 包含一些　C++　工具类, 使用简便, 功能强大.
 | liter/callable.h | functor_call | 可调用对象的参数解包示例 |
 | liter/command.hpp | command | 命令模式实现模板 |
 | liter/curry.hpp | curry | 函数科里化实现模板 |
-
+| liter/events.hpp | events | 观察者模式实现模板 |
+| liter/function_traits.hpp | function_traits | 函数特征提取模板 |
+| liter/ioc.hpp | Ioc | 控制反转实现模板 |
+| liter/lazy.h | lazy | 惰性求值 |
+| liter/linq.hpp | linq | 语言集成查询 |
+| liter/message_bus.hpp | MessageBus | 消息总线 |
+| liter/object_pool.hpp | ObjectPool | 对象池 |
+| liter/optional.hpp | optional | 可选值模板 |

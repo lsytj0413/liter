@@ -33,8 +33,7 @@ struct Lazy
     // @brief 获取值
     // @return T
     T value() {
-        if (!init_p())
-        {
+        if (!init_p()) {
             m_value = m_func();
         }
 

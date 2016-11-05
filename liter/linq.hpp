@@ -1,5 +1,5 @@
 // @file linq.hpp
-// @brief
+// @brief 语言集成查询
 // @author
 // @version
 // @date
