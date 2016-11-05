@@ -16,6 +16,7 @@ namespace liter
 
 // @class any
 // @brief 任意类型的容器
+// @c++17 可使用 std::any
 class any
 {
 public:

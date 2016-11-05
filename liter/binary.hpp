@@ -42,9 +42,10 @@ private:
 		static long long const value_l = N / 10;
 		static long long const value_r = N % 10;
 
-		using binary_l_type = typename std::conditional < value_l < 10,
-                                                                detail::binary_bit<value_l>,
-                                                                binary < value_l >> ::type;
+		using binary_l_type = typename std::conditional < (value_l < 10),
+        detail::binary_bit<value_l>,
+        binary < value_l >
+            > ::type;
 		using binary_r_type = typename detail::binary_bit<value_r>;
 
 public:

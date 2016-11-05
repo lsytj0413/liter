@@ -35,3 +35,8 @@ liter 包含一些　C++　工具类, 使用简便, 功能强大.
 | 文件 | 内容 | 描述 |
 |:--|:--|:--|
 | liter/Singleton.h | Singleton | 单例模式的实现模板 |
+| liter/SyncQueue.hpp | SyncQueue | 线程安全的队列容器模板  |
+| liter/any.hpp | any | 可存放任意类型的any容器 |
+| liter/aspect.hpp | aspect | AOP简易实现 |
+| liter/binary.hpp | binary | 编译时2进制与10进制工具 |
+| liter/callable.h | functor_call | 可调用对象的参数解包示例 |
