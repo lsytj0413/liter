@@ -76,3 +76,71 @@ v = liter::any(std::string("any"));
 v.is<std::string>();                         // true
 std::string s = v.cast<std::string>();       // "any"
 ```
+
+### liter::aspect
+
+```
+class A {
+public:
+    void before(int i){ cout << "A::before" << endl; };
+};
+
+class B {
+public:
+    void after(int i){ cout << "B::after" << endl; };
+};
+
+class C {
+public:
+    void before(int i){ cout << "C::before" << endl; };
+    void after(int i){ cout << "C::after" << endl; };
+};
+void test(int i){ cout << "test" << endl;};
+
+liter::invoke<A, B, C>(test, 10);
+A::before
+C::before
+test
+B::after
+C::after
+```
+
+### liter::command
+
+```
+static int test3(int i, int j){
+    return i + j;
+};
+
+auto f1 = liter::command<int>();
+f1.wrap(test3, 10, 30);
+
+auto v1 = f1.execute();      // v1 = 40
+```
+
+### liter::curry
+
+```
+int test_f2(int i, int j){
+    return i + j;
+};
+
+auto v = liter::curry(test_f2);
+int i = v(1)(10)；       // i = 11
+```
+
+### liter::function_traits
+
+```
+double h0(int i, double j, char c){
+    return j;
+};
+
+using R0 = liter::function_traits<decltype(h0)>::return_type;
+auto v0 = std::is_same<double, R0>::value;     // v0 = true
+auto num0 = liter::function_traits<decltype(h0)>::arity;   // num0 = 3
+using arg00 = typename liter::function_traits<decltype(h0)>::template arg_type<0>;
+auto v00 = std::is_same<int, arg00>::value;   // v00 = true
+using arg01 = typename liter::function_traits<decltype(h0)>::template args<1>::type;
+auto v01 = std::is_same<double, arg01>::value;   // v01 = true
+```
