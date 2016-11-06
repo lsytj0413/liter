@@ -63,3 +63,16 @@ liter 包含一些　C++　工具类, 使用简便, 功能强大.
 | liter/visitor.hpp | visitor | 访问者模式实现模板 |
 | liter/DllHelper.h | DllHelper | 动态库调用帮助类, 适用于 Windows |
 
+## 使用示例
+
+### liter::any
+
+```
+auto v = liter::any();
+v = liter::any(int(1));
+v.is<int>();                                 // true
+int i = v.cast<int>();                       // 1
+v = liter::any(std::string("any"));
+v.is<std::string>();                         // true
+std::string s = v.cast<std::string>();       // "any"
+```
