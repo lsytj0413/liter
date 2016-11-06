@@ -50,3 +50,16 @@ liter 包含一些　C++　工具类, 使用简便, 功能强大.
 | liter/message_bus.hpp | MessageBus | 消息总线 |
 | liter/object_pool.hpp | ObjectPool | 对象池 |
 | liter/optional.hpp | optional | 可选值模板 |
+| liter/range.hpp | range | 生成范围序列 |
+| liter/sequence.hpp | sequence | 序列 |
+| liter/string_utils.h | StringUtils | 一些字符串处理相关函数 |
+| liter/task.h | task | 并行任务 |
+| liter/thread_pool.hpp | ThreadPool | 半同步半异步线程池 |
+| liter/timer.h | timer | 计时器 |
+| liter/tulpe_helper.hpp | find_index, apply等 | 一些std::tuple的帮助函数 |
+| liter/uncopyable.h | uncopyable | 禁止拷贝基类 |
+| liter/utils.h | variadic_sum等 | 一些工具函数 |
+| liter/variant.hpp | variant | 可变值类型容器 |
+| liter/visitor.hpp | visitor | 访问者模式实现模板 |
+| liter/DllHelper.h | DllHelper | 动态库调用帮助类, 适用于 Windows |
+

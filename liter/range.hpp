@@ -1,5 +1,5 @@
 // @file range.hpp
-// @brief 生成范围
+// @brief 生成范围序列
 // @author
 // @version
 // @date

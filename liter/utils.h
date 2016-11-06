@@ -1,5 +1,5 @@
 // @file utils.h
-// @brief 一些工具
+// @brief 一些工具函数
 // @author
 // @version
 // @date

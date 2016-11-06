@@ -1,5 +1,5 @@
-// @file thread_pool.h
-// @brief 线程池
+// @file thread_pool.hpp
+// @brief 半同步半异步线程池
 // @author
 // @version
 // @date

@@ -1,5 +1,5 @@
 // @file variant.hpp
-// @brief 可变值容器
+// @brief 可变值类型容器
 // @author
 // @version
 // @date
@@ -160,6 +160,7 @@ struct At<0, T, Types...>
 
 // @class variant
 // @brief 可变类型容器
+// @c++17 可使用std::variant
 template <typename... Types>
 class variant
 {
