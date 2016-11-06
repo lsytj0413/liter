@@ -144,3 +144,90 @@ auto v00 = std::is_same<int, arg00>::value;   // v00 = true
 using arg01 = typename liter::function_traits<decltype(h0)>::template args<1>::type;
 auto v01 = std::is_same<double, arg01>::value;   // v01 = true
 ```
+
+### liter::linq
+
+```
+std::vector<Person> v = {
+    {21, "a", "shanghai"}, 
+    {22, "bb", "wuhan"},
+    {21, "a", "zhuhai"}
+};
+
+auto p = liter::from(v).where([](const Person& p){
+     return p.age > 21;
+}).begin();     // p->age = 22
+```
+
+### liter::MessageBus
+
+```
+static int g = 0;
+static void f0(){
+    g += 10;
+};
+
+liter::MessageBus m;
+m.attach(f0);
+m.send<void>();     // g = 10
+```
+
+### liter::ObjectPool
+
+```
+class A {}; 
+liter::ObjectPool<A, 1> pool;
+pool.init(1);
+auto p0 = pool.get();
+```
+
+### liter::optional
+
+```
+liter::optional<int> op;
+op.init_p();      // false
+op.emplace(1);
+*op;              // 1
+op.init_p();      // true
+```
+
+### liter::range
+
+```
+auto sum = 0;
+for(auto&& i : liter::range(10)) {
+    sum += i;
+}     // sum = 45
+```
+
+### liter::sequence
+
+```
+using f = typename liter::make_sequence<5>::type;
+auto v = std::is_same<f, liter::sequence<0, 1, 2, 3, 4>>::value;    // v = true
+```
+
+### liter::ThreadPool
+
+```
+liter::ThreadPool pool;
+int g = 0;
+pool.add([&](){g = 1;});    // g = 1
+```
+
+### liter::variant
+
+```
+using T0 = liter::variant<int, char>;
+auto v0 = T0();
+v0.is<int>();       // false
+v0.is<char>();      // false
+ v0 = T0(10);
+v0.is<int>();       // true
+v0.get<int>();      // 10
+v0.is<char>();      // false
+ v0 = T0('a');
+v0.is<int>();       // false
+v0.is<char>();      // true
+v0.get<char>();     // 'a'
+```
