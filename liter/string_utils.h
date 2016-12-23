@@ -46,15 +46,13 @@ struct StringUtils
     // @return bool
     static bool whitespace_p(const string& val_str)
     {
+        auto v = true;
         for (auto&& val_ch : val_str)
         {
-            if (!whitespace_p(val_ch))
-            {
-                return false;
-            }
+            v = v & whitespace_p(val_ch);
         }
 
-        return true;
+        return v;
     }
 
     // @function
@@ -178,16 +176,14 @@ struct StringUtils
                 return numeric_p(val_ch);
             } };
 
+        auto v = true;
         for (auto&& val_ch : val_str)
         {
-            if (!stat_funcs[status](val_ch))
-            {
-                return false;
-            }
+            v = v & stat_funcs[status](val_ch);
         }
 
-        return 2 == status ||
-                4 == status;
+        return v & (2 == status ||
+                    4 == status);
     }
 
     // @function
