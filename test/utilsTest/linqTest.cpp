@@ -635,5 +635,5 @@ TEST_F(LinqTest, testZip)
 
     ++it;
     EXPECT_EQ((*it).get<0>(), 100);
-    EXPECT_EQ((*it).get<1>(), 2);
+    EXPECT_EQ((*it).get<1>(), 0);
 }
