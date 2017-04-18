@@ -2,32 +2,37 @@ language: cpp
 sudo: required
 # operate system version
 dist: trusty
+
 compiler:
 - clang
 - gcc
-os:
-- linux
+
 before_install:
 - echo $LANG
 - echo $LC_ALL
 - sudo apt update
+
 addons:
   apt:
     packages:
-	  - libgtest-dev
+    - libgtest-dev
+
 before_script:
 - cd test/
 - mkdir build
 - cd build
 - cmake .. && make
+
 script:
 - ./main
+
 branches:
   only:
   - master
-	- develop
+  - develop
+
 notifications:
   email:
     on_success: never
-	  on_failure: change
+    on_failure: change
 
