@@ -29,8 +29,8 @@ addons:
     packages:
     - libgtest-dev
     - clang-3.8
-    - g++-5.4
-    - gcc-5.4
+    - g++-5
+    - gcc-5
 
 before_script:
 - cd test/
