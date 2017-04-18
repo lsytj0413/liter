@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <functional>
 
 #include <cxxabi.h>
 
@@ -236,7 +237,8 @@ TEST_F(LinqTest, testContains)
 TEST_F(LinqTest, testDistinct)
 {
     std::vector<int> v0 = {1, 2, 3, 3, 5, 5};
-    auto f = liter::from(v0).where([](int i){return true;}).distinct().count();
+    // fix for: a lambda closure type has a deleted copy assignment operator
+    auto f = liter::from(v0).where(std::function<void(int)>([](int i){return true;})).distinct().count();
     EXPECT_EQ(f, 4);
 
     // auto f1 = liter::from(v0).distinct([](auto i, auto j){
