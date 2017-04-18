@@ -2,13 +2,13 @@ language: cpp
 sudo: required
 dist: trusty
 compiler:
-	- clang
-	- gcc
+- clang
+- gcc
 os:
-	- linux
+- linux
 before_install:
-	- echo $LANG
-	- echo $LC_ALL
-	- apt update && apt install libgtest-dev
+- echo $LANG
+- echo $LC_ALL
+- apt update && apt install libgtest-dev
 
 
