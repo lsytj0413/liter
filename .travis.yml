@@ -1,5 +1,6 @@
 language: cpp
 sudo: required
+# operate system version
 dist: trusty
 compiler:
 - clang
@@ -9,13 +10,24 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-- sudo apt update && sudo apt install -y libgtest-dev
-script:
-- cd test
+- sudo apt update
+addons:
+  apt:
+    packages:
+	- libgtest-dev
+before_script:
+- cd test/
 - mkdir build
 - cd build
-- cmake ..
-- make
+- cmake .. && make
+script:
 - ./main
-
+branches:
+  only:
+    - master
+	- develop
+notifications:
+  email:
+    on_success: never
+	on_failure: change
 
