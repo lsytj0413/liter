@@ -10,5 +10,12 @@ before_install:
 - echo $LANG
 - echo $LC_ALL
 - sudo apt update && sudo apt install -y libgtest-dev
+script:
+- cd test
+- mkdir build
+- cd build
+- cmake ..
+- make
+- ./main
 
 
