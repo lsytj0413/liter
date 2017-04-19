@@ -9,6 +9,7 @@ compiler:
 before_install:
 - echo $LANG
 - echo $LC_ALL
+- sudo pip install --user cpp-coveralls
 - sudo apt-get -qq update
 - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
 - sudo tar xf release-1.7.0.tar.gz
@@ -41,6 +42,9 @@ before_script:
 
 script:
 - ./main
+
+after_success:
+- coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 
 branches:
   only:

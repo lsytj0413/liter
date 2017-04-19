@@ -2,7 +2,15 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT (test_liter)
 
-set (CMAKE_CXX_FLAGS "-std=c++14")
+# OPTION(ENABLE_GCOV "Enable gcov (debug, Linux builds only)" ON)
+
+# IF (ENABLE_GCOV AND NOT WIN32 AND NOT APPLE)
+#   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wall -fprofile-arcs -ftest-coverage")
+#   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+#   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -lgcov")
+# ENDIF()
+
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 --coverage")
 
 SET (TEST_SRC
   main.cpp
