@@ -9,7 +9,7 @@ compiler:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-- sudo pip install --user cpp-coveralls
+- sudo pip install cpp-coveralls
 - sudo apt-get -qq update
 - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
 - sudo tar xf release-1.7.0.tar.gz
