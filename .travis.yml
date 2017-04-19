@@ -44,7 +44,7 @@ script:
 - ./main
 
 after_success:
-- coveralls -r ../../liter --exclude CMakeFiles -e test --gcov-options '\-lp'
+- coveralls -r ../../ --exclude CMakeFiles -e test --gcov-options '\-lp'
 
 branches:
   only:
