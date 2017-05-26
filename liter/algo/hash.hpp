@@ -18,11 +18,13 @@ namespace algo
 struct Identify {};
 struct Thomas {};
 
+// @brief 简单hash函数
 template <typename T = Identify>
 unsigned int hash(unsigned int key) {
     return key;
 }
 
+// @brief Thomas Wang's 32bit Mix Function
 template <>
 unsigned int hash<Thomas>(unsigned int key) {
     key += ~(key << 15);
@@ -35,9 +37,10 @@ unsigned int hash<Thomas>(unsigned int key) {
     return key;
 }
 
-
-// Generic hash function, one from Bernstein
-unsigned int hash(const unsigned char *buf, int len) {
+// @brief Generic hash function, one from Bernstein, 大小写敏感
+template <bool sensitive = true>
+unsigned int hash(const unsigned char* buf, unsigned int len)
+{
     unsigned int hash = 5381;
 
     while(len--) {
@@ -47,8 +50,10 @@ unsigned int hash(const unsigned char *buf, int len) {
     return hash;
 }
 
-// Generic hash function, one from Bernstein, insensitive
-unsigned int hash_insensitive(const unsigned char *buf, int len) {
+// @brief 大小写不敏感
+template <>
+unsigned int hash<false>(const unsigned char* buf, unsigned int len)
+{
     unsigned int hash = 5381;
 
     while(len--) {
@@ -57,7 +62,6 @@ unsigned int hash_insensitive(const unsigned char *buf, int len) {
     }
     return hash;
 }
-
 
 }
 
