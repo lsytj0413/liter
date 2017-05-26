@@ -18,9 +18,12 @@ namespace algo
 struct Identify {};
 struct Thomas {};
 
+template <typename T>
+unsigned int hash(unsigned int);
+
 // @brief 简单hash函数
-template <typename T = Identify>
-unsigned int hash(unsigned int key) {
+template <>
+unsigned int hash<Identify>(unsigned int key) {
     return key;
 }
 

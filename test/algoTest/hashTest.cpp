@@ -24,7 +24,7 @@ TEST_F(HashTest, testHashIndentify)
         23423423
     };
     for (auto&& i : v) {
-        EXPECT_EQ(i, hash(i));
+        EXPECT_EQ(i, hash<Identify>(i));
     }
 }
 
