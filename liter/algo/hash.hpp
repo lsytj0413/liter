@@ -15,14 +15,16 @@ namespace liter
 namespace algo
 {
 
+struct Identify {};
+struct Thomas {};
 
-// Identity hash function
+template <typename T = Identify>
 unsigned int hash(unsigned int key) {
     return key;
 }
 
-// Thomas Wang's 32 bit Mix Function
-unsigned int hash_int(unsigned int key) {
+template <>
+unsigned int hash<Thomas>(unsigned int key) {
     key += ~(key << 15);
     key ^= (key >> 10);
     key += (key << 3);
@@ -44,7 +46,6 @@ unsigned int hash(const unsigned char *buf, int len) {
     }
     return hash;
 }
-
 
 // Generic hash function, one from Bernstein, insensitive
 unsigned int hash_insensitive(const unsigned char *buf, int len) {

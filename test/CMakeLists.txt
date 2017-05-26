@@ -41,6 +41,7 @@ SET (TEST_SRC
   utilsTest/linqTest.cpp
   utilsTest/curryTest.cpp
   algoTest/matchTest.cpp
+  algoTest/hashTest.cpp
   )
 
 include_directories(../)
