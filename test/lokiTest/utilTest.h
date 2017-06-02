@@ -3,5 +3,5 @@
 #include <gtest/gtest.h>
 
 
-class NullTypeTest : public testing::Test
+class UtilTest : public testing::Test
 {};

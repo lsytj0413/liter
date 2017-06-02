@@ -8,7 +8,7 @@
 
 #include <type_traits>
 
-#include <liter/loki/null_type.hpp>
+#include <liter/loki/util.hpp>
 
 
 namespace liter
