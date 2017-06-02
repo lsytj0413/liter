@@ -42,6 +42,8 @@ SET (TEST_SRC
   utilsTest/curryTest.cpp
   algoTest/matchTest.cpp
   algoTest/hashTest.cpp
+  lokiTest/nullTypeTest.cpp
+  lokiTest/typelistTest.cpp
   )
 
 include_directories(../)
