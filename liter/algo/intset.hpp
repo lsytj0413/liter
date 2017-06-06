@@ -39,9 +39,20 @@ struct Helper
 
 class intset {
 private:
-    uint32_t m_encoding;
-    uint32_t m_length;
-    int8_t* m_contents;
+    uint32_t m_encoding = INTSET_ENC_INT16;
+    uint32_t m_length = 0;
+    int8_t* m_contents = nullptr;
+
+public:
+    intset() : m_encoding(INTSET_ENC_INT16),
+               m_length(0),
+               m_contents(nullptr)
+    {}
+
+    // 改变大小
+    void resize(uint32_t size) {
+    }
+
 };
 
 }
