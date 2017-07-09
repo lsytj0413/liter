@@ -4,6 +4,8 @@
 // @version
 // @date
 
+#pragma once
+
 #include <functional>
 #include <tuple>
 #include <memory>
