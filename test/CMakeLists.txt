@@ -40,6 +40,7 @@ SET (TEST_SRC
   utilsTest/taskTest.cpp
   utilsTest/linqTest.cpp
   utilsTest/curryTest.cpp
+  utilsTest/podReflectionTest.cpp
   algoTest/matchTest.cpp
   algoTest/hashTest.cpp
   lokiTest/utilTest.cpp
