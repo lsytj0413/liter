@@ -30,7 +30,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - libgtest-dev
-    - libboost-dev
+    - libboost-all-dev
     - g++-5
     - gcc-5
 
