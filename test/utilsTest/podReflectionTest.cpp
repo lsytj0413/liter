@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <typeindex>
 #include <memory>
-#include <boost/type_index.hpp>
+// #include <boost/type_index.hpp>
 
 struct foo {
     unsigned char i0;
@@ -24,11 +24,12 @@ struct foo {
 
 template <std::size_t I, class T>
 void print(T& f) {
-    printf(
-        "%lu\t\t%s\n",
-        (std::size_t)get<I>(f),
-        boost::typeindex::type_id<decltype(get<I>(f))>().pretty_name().c_str()
-           );
+    // printf("%lu\t\t%s\n",
+    //        (std::size_t)get<I>(f),
+    //        boost::typeindex::type_id<decltype(get<I>(f))>().pretty_name().c_str());
+
+    printf("%lu\t\t\n",
+           (std::size_t)get<I>(f));
 }
 
 TEST_F(PodReflectionTest, testAll)
