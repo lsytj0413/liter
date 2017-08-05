@@ -57,7 +57,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 SET( CMAKE_BUILD_TYPE Debug )
 
 # boost
-set(BOOST_ROOT "~/workspace/3rd/boost_1_61_0")
+# set(BOOST_ROOT "~/workspace/3rd/boost_1_61_0")
 include_directories(${Boost_INCLUDE_DIRECTORY})
 
 add_executable(main ${TEST_SRC})
