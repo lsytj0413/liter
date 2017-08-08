@@ -57,8 +57,7 @@ public:
 // @brief在编译时将2进制串转换为10进制
 // @return long long
 template <unsigned long long N>
-long long binary_to()
-{
+long long binary_to() {
     return binary<N>::value;
 }
 

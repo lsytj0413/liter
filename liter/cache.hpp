@@ -21,6 +21,7 @@ using std::map;
 namespace liter
 {
 
+// 以函数中不同的参数为 key cache 返回值
 template <typename R, typename... Args>
 function<R(Args...)> cache(R(*func) (Args...)) {
     auto result_map = make_shared<map<tuple<Args...>, R>>();
@@ -35,6 +36,7 @@ function<R(Args...)> cache(R(*func) (Args...)) {
         });
 }
 
+// 函数类型为 key cache 返回值
 template<typename R, typename... Args>
 function<R(Args...)> sugar(R(*func)(Args...), bool needClear = false) {
     using function_type = function<R(Args...)>;

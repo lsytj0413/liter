@@ -16,7 +16,7 @@ namespace liter
 {
 
 // @macro HAS_MEMBER
-// @brief 生成一个struct用于检查某个类型是否具有某个函数
+// @brief 生成一个struct用于检查某个类型是否具有某个函数, 在 Check函数中尝试返回调用 member 函数的结果, 如果函数存在则返回 std::true_type
 // @param member: 函数名
 #define HAS_MEMBER(member) \
     template <typename T, typename... TArgs> \
@@ -126,6 +126,7 @@ public:
     };
 };
 
+// for vs2013, 因为在 VS2013 中 AP()... 不能通过编译
 template <typename T>
 using identity_t = T;
 

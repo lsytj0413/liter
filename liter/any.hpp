@@ -29,7 +29,7 @@ public:
     {};
 
     // @function
-    // @brief 普通构造函数, 通过值构造
+    // @brief 普通构造函数, 通过值构造, 需要排除 U 为 any 类型的对象
     // @param v: 值
     template <typename U, class = typename std::enable_if<!std::is_same<typename std::decay<U>::type,
                                                                         any>::value,
@@ -41,8 +41,7 @@ public:
     // @function
     // @brief 是否初始化
     // @return bool
-    bool null_p() const
-    {
+    bool null_p() const {
         return !bool(m_ptr);
     };
 
@@ -50,8 +49,7 @@ public:
     // @brief 是否是某个类型的值
     // @return bool
     template <class U>
-    bool is() const
-    {
+    bool is() const {
         return m_type_index == std::type_index(typeid(typename std::decay<U>::type));
     };
 
@@ -59,12 +57,10 @@ public:
     // @brief 获取值
     // @return U类型的对象
     template <class U>
-    typename std::decay<U>::type& cast()
-    {
+    typename std::decay<U>::type& cast() {
         using U1 = typename std::decay<U>::type;
-        if(!is<U1>())
-        {
-            throw std::logic_error{"bad case"};
+        if(!is<U1>()) {
+            throw std::logic_error{"<any> bad case"};
         }
 
         auto derived = dynamic_cast<Derived<U1>*>(m_ptr.get());
@@ -75,10 +71,8 @@ public:
     // @brief 赋值
     // @param rhs: any对象
     // @return any
-    any& operator=(const any& rhs)
-    {
-        if (m_ptr == rhs.m_ptr)
-        {
+    any& operator=(const any& rhs) {
+        if (m_ptr == rhs.m_ptr) {
             return *this;
         }
 
@@ -115,16 +109,15 @@ private:
         T m_value;
     };
 
-    BasePtr clone() const
-    {
-        if (m_ptr != nullptr)
-        {
+    BasePtr clone() const {
+        if (m_ptr != nullptr) {
             return m_ptr->clone();
         }
 
         return nullptr;
     }
 
+    // 保存 unique_ptr<Base> 类型的对象, 类型擦除之后的对象
     BasePtr m_ptr;
     std::type_index m_type_index;
 };
