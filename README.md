@@ -11,6 +11,24 @@ liter是一个采用C++11/14编写的 Header only 的工具库. 包含一些C++�
 
 具体使用方式可以参见　*test* 目录下的单元测试用例.
 
+## 第三方依赖 ##
+
+### boost ###
+
+库中的某些功能依赖 boost 库, 可以使用如下方式安装:
+
+```
+apt install libboost-dev
+```
+
+### gtest ###
+
+单元测试使用的是 GTEST 测试框架, 可以使用如下方式安装:
+
+```
+apt install libgtest-dev
+```
+
 ## 编译
 
 liter库只包含头文件, 不需编译即可使用. 用户可以选择编译运行单元测试.
