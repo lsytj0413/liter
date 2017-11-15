@@ -1,10 +1,13 @@
-//this code is from magic_get, but more simple and easy to understand the magic.
-//modern c++ is really an magic wonderful language!
+// this code is from magic_get, but more simple and easy to understand the magic.
+// modern c++ is really an magic wonderful language!
 
 #include <type_traits>
 #include <utility>
 #include <iostream>
 #include <tuple>    // GCC: reimplement tuple to have non-reverse order of elements
+
+namespace liter
+{
 
 ///////////////////// Tuple that holds it's values in the supplied order
 namespace sequence_tuple
@@ -113,7 +116,6 @@ namespace sequence_tuple
 
 namespace detail
 {
-
     template <class T, std::size_t N>
     struct array {      // CLANG: misses constexpr on operator[]
         typedef T type;
@@ -348,4 +350,6 @@ decltype(auto) get(const T& val) noexcept {
 template <class T>
 constexpr std::size_t tuple_size() noexcept {
     return decltype(detail::as_tuple<T>())::size_v;
+}
+
 }
