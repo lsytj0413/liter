@@ -7,4 +7,4 @@ GTAGS
 test/build/*
 test/build
 *.pyc
-
+.vscode
